@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-pry: #24356d;
+  --color-secondary: #6598c3;
+  --color-sec: #2e3443;
+  --color-light: #f3eefe;
+  --color-dark: #23272c;
+  --color-active: #83bcfa;
+  --color-button-pry: #101346;
+  --color-dark-text: #17243e;
+  --color-light-text: #f4f5f7;
+  --color-border: #e0e4ea;
+  --color-icon: #969da6;
+  --color-mantra-orange: #f28e2b;
+  --color-pry-text: #101828;
+
+  /* [#EEF4FE] */
+
+  /* #1D2A57 first mantra blue */
+  /* #24356D mantra blue */
+
+  --font-poppins: 'Poppins', sans-serif;
+  --font-opensans: 'Open_Sans', sans-serif;
+  --font-jakarta: 'Plus_Jakarta_Sans', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-libre: 'Libre_Franklin', sans-serif;
+  --font-mulish: 'Mulish', sans-serif;
+}

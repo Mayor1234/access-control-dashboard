@@ -1,0 +1,393 @@
+import {
+  MdNotifications,
+  MdOutlineHome,
+  MdOutlineWallet,
+  MdSettings,
+  MdVerifiedUser,
+  MdAnalytics,
+} from 'react-icons/md';
+import { BsPersonVcard } from 'react-icons/bs';
+import { HiUsers } from 'react-icons/hi2';
+import { FaUsers } from 'react-icons/fa6';
+import { FcInvite } from 'react-icons/fc';
+
+// export interface Visitor {
+//   id: string;
+//   name: string;
+//   accessCode: string;
+//   hostName: string;
+//   dateCreated: string;
+//   status: 'upcoming' | 'checked-in' | 'checked-out';
+//   more: boolean;
+// }
+
+export const sideBarTopMenu = [
+  {
+    label: 'Dashboard',
+    path: '/dashboard',
+    icon: <MdOutlineHome className="h-5 w-5" />,
+  },
+  {
+    label: 'Visitor Log',
+    path: '/visitor-log',
+    icon: <BsPersonVcard className="h-5 w-5" />,
+  },
+  {
+    label: 'Approval Oversight',
+    path: '/approval-oversight',
+    icon: <HiUsers className="h-5 w-5" />,
+  },
+  {
+    label: 'Analytics & Reports',
+    path: '/analytics-reports',
+    icon: <MdAnalytics className="h-5 w-5" />,
+  },
+  {
+    label: 'Community Management',
+    path: '/community-management',
+    icon: <FaUsers className="h-5 w-5" />,
+  },
+  {
+    label: 'Invites',
+    path: '/invites',
+    icon: <FcInvite className="h-5 w-5" />,
+  },
+  {
+    label: 'Billing & Wallet',
+    path: '/billing-wallet',
+    icon: <MdOutlineWallet className="h-5 w-5" />,
+  },
+  {
+    label: 'Notifications',
+    path: '/notifications',
+    icon: <MdNotifications className="h-5 w-5" />,
+  },
+];
+
+export const sideBarBottomMenu = [
+  {
+    label: 'Profile',
+    path: '/profile',
+    icon: <MdVerifiedUser className="h-5 w-5" />,
+  },
+  {
+    label: 'Settings',
+    path: '/settings',
+    icon: <MdSettings className="h-5 w-5" />,
+  },
+];
+
+// Dashboard - Pending Residents Data
+export const residentsData = [
+  {
+    id: '#Ref34531',
+    name: 'Telena Daniel Joshua',
+    phone: '08045678901',
+    street: 'Nehita Street',
+    status: 'pending',
+    more: true,
+  },
+  {
+    id: '#Ref34532',
+    name: 'Sarah Obidi David',
+    phone: '08045678901',
+    street: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '#Ref34533',
+    name: 'Ekom Michael Anthony',
+    phone: '08045678901',
+    street: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+  {
+    id: '#Ref34534',
+    name: 'Telena Daniel Joshua',
+    phone: '08045678901',
+    street: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '#Ref34535',
+    name: 'Sarah Obidi David',
+    phone: '08045678901',
+    street: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+];
+
+// Sample data based on your image
+export const visitorsData = [
+  {
+    id: '1',
+    name: 'Aniedi Sunday',
+    accessCode: '#Ref34535',
+    hostName: 'Silas Iman',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'upcoming',
+    more: false,
+  },
+  {
+    id: '2',
+    name: 'Telena Daniel Joshua',
+    accessCode: '#Ref34535',
+    hostName: 'korah Lious',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'checked-in',
+    more: false,
+  },
+  {
+    id: '3',
+    name: 'Sarah Obidi David',
+    accessCode: '#Ref34535',
+    hostName: 'Idowu Timi',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'checked-in',
+    more: false,
+  },
+  {
+    id: '4',
+    name: 'Ekom Michael Anthony',
+    accessCode: '#Ref34535',
+    hostName: 'Preye Timi',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'upcoming',
+    more: false,
+  },
+  {
+    id: '5',
+    name: 'Telena Daniel Joshua',
+    accessCode: '#Ref34535',
+    hostName: 'Abikeme Aloma',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'checked-in',
+    more: false,
+  },
+  {
+    id: '6',
+    name: 'Sarah Obidi David',
+    accessCode: '#Ref34535',
+    hostName: 'Samuel Samuel',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'checked-in',
+    more: false,
+  },
+  {
+    id: '7',
+    name: 'Ekom Michael Anthony',
+    accessCode: '#Ref34535',
+    hostName: 'Elijah Timothy',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'checked-in',
+    more: false,
+  },
+  {
+    id: '8',
+    name: 'Telena Daniel Joshua',
+    accessCode: '#Ref34535',
+    hostName: 'Ruth Okoro',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'checked-in',
+    more: false,
+  },
+  {
+    id: '9',
+    name: 'Sarah Obidi David',
+    accessCode: '#Ref34535',
+    hostName: 'Manu Kumasha',
+    dateCreated: '29/11/2025, 09:00AM',
+    status: 'upcoming',
+    more: false,
+  },
+  {
+    id: '10',
+    name: 'John Doe',
+    accessCode: '#Ref34536',
+    hostName: 'Jane Smith',
+    dateCreated: '29/11/2025, 10:00AM',
+    status: 'checked-out',
+    more: false,
+  },
+  {
+    id: '11',
+    name: 'Alice Johnson',
+    accessCode: '#Ref34537',
+    hostName: 'Bob Wilson',
+    dateCreated: '29/11/2025, 11:00AM',
+    status: 'checked-out',
+    more: false,
+  },
+];
+
+export const residentsOversight = [
+  {
+    id: '1',
+    name: 'Idowu Daniel',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '2',
+    name: 'Telena Daniel Joshua',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '3',
+    name: 'Sarah Obidi David',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '4',
+    name: 'Ekom Michael Anthony',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+  {
+    id: '5',
+    name: 'Telena Daniel Joshua',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '6',
+    name: 'Sarah Obidi David',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '7',
+    name: 'Ekom Michael Anthony',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+  {
+    id: '8',
+    name: 'Telena Daniel Joshua',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'pending',
+    more: false,
+  },
+  {
+    id: '9',
+    name: 'Sarah Obidi David',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+];
+
+export const communityData = [
+  {
+    id: '1',
+    name: 'Idowu Daniel',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'actie',
+    more: false,
+  },
+  {
+    id: '2',
+    name: 'Telena Daniel Joshua',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'active',
+    more: false,
+  },
+  {
+    id: '3',
+    name: 'Sarah Obidi David',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'active',
+    more: false,
+  },
+  {
+    id: '4',
+    name: 'Ekom Michael Anthony',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+  {
+    id: '5',
+    name: 'Telena Daniel Joshua',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'active',
+    more: false,
+  },
+  {
+    id: '6',
+    name: 'Sarah Obidi David',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'active',
+    more: false,
+  },
+  {
+    id: '7',
+    name: 'Ekom Michael Anthony',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+  {
+    id: '8',
+    name: 'Telena Daniel Joshua',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'active',
+    more: false,
+  },
+  {
+    id: '9',
+    name: 'Sarah Obidi David',
+    identificationNo: '#Ref34535',
+    phoneNumber: '08045678901',
+    streetName: 'Nehita Street',
+    status: 'inactive',
+    more: false,
+  },
+];
