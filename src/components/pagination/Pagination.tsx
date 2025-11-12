@@ -27,7 +27,7 @@ const Pagination = ({
 
   return (
     <nav aria-label="Pagination Navigation" className=" w-full my-4">
-      <ul className="flex justify-between items-center  px-5 w-full gap-1">
+      <ul className="flex items-center justify-end gap-5 px-5 w-full  z-30">
         <Button
           variant="outline"
           size="md"

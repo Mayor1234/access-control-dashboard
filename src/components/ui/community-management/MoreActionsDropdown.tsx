@@ -1,14 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import type { EstateResident } from '../../../redux/features/dashboard/residentTypes';
 
 const MoreActionsDropdown = ({
-  residentId,
-  residentName,
+  data,
   isOpen,
   onToggle,
   onClose,
 }: {
-  residentId: string;
-  residentName: string;
+  data: EstateResident;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
@@ -19,18 +18,14 @@ const MoreActionsDropdown = ({
   const { pathname } = location;
 
   const handleViewDetail = () => {
-    console.log(`Viewing details for ${residentName}`);
-    console.log(residentId);
-    navigate(`${pathname}/${residentId}`);
+    navigate(`${pathname}/${data.id}`);
     onClose();
   };
 
   const handleApproveDetail = () => {
-    console.log(`Approved ${residentName}`);
     onClose();
   };
   const handleDeleteResident = () => {
-    console.log(`Deleting ${residentName}`);
     onClose();
   };
 

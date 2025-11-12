@@ -5,6 +5,7 @@
   --color-secondary: #6598c3;
   --color-sec: #2e3443;
   --color-light: #f3eefe;
+  --color-text-light: #667085;
   --color-dark: #23272c;
   --color-active: #83bcfa;
   --color-button-pry: #101346;
@@ -14,6 +15,7 @@
   --color-icon: #969da6;
   --color-mantra-orange: #f28e2b;
   --color-pry-text: #101828;
+  --color-pry-light: #8692a6;
 
   /* [#EEF4FE] */
 
@@ -28,4 +30,17 @@
   --font-montserrat: 'Montserrat', sans-serif;
   --font-libre: 'Libre_Franklin', sans-serif;
   --font-mulish: 'Mulish', sans-serif;
+}
+
+@layer utilities {
+  /* For WebKit browsers (Chrome, Safari, Opera) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* For IE, Edge, and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

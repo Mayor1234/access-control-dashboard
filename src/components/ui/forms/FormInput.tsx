@@ -1,4 +1,3 @@
-// components/ui/FormInput.tsx
 import React, { useEffect, useRef } from 'react';
 import {
   useFormContext,
@@ -68,7 +67,7 @@ export const FormInput = <T extends FieldValues>({
               placeholder={placeholder}
               autoComplete="off"
               className={cn(
-                'w-full px-3 py-2.5 text-[#343942] placeholder:text-[#A6A6A6] font-mulish text-sm border border-border rounded-xl transition-all duration-300 ease-linear focus:outline-none focus:ring focus:ring-active focus:border-active',
+                'w-full px-3 py-2.5 text-[#343942] placeholder:text-[#A6A6A6] font-mulish text-sm border border-border rounded-lg transition-all duration-300 ease-linear focus:outline-none focus:ring focus:ring-active focus:border-active',
                 iconLeft ? 'pl-10' : '',
                 error && 'border-red-500',
                 className

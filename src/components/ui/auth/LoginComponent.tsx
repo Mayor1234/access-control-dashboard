@@ -1,103 +1,103 @@
-import { FormProvider, useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormInput from '../forms/FormInput';
+import { useLoginMutation } from '../../../redux/features/auth/authApi';
+import Spinners from '../../spinnners/Spinners';
+import { Button } from '../button/Button';
 
 type LoginStep = 'credentials' | 'otp-verification' | 'success';
 
 type Props = {
-  activeScreen: string;
   setActiveScreen: React.Dispatch<React.SetStateAction<LoginStep>>;
 };
 
-type LoginValues = {
+interface LoginFormData {
   email: string;
   password: string;
-};
+}
 
 const LoginComponent: React.FC<Props> = ({ setActiveScreen }) => {
-  const methods = useForm<LoginValues>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+  const [loginUser, { isLoading }] = useLoginMutation();
+  // const dispatch = useAppDispatch();
+  // const navigate = useNavigate();
+  // const from = location.state?.from?.pathname || '/dashboard';
+  // const [setUserId] = useLocalStorage('user_id', '');
 
-  const handleSubmit = methods.handleSubmit((data) => {
-    console.log('login credential:', data);
-    const email = 'mantra@gmail.com';
-    const password = 'admin2025';
+  const {
+    handleSubmit,
+    // formState: { errors },
+  } = useFormContext<LoginFormData>();
+
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      if (!data.email || !data.password) {
-        toast.error("email and password can't be empty");
-        return;
+      const response = await loginUser({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      if (response.status === 'success') {
+        setActiveScreen('otp-verification');
+        toast.success(
+          response.message || 'Login successful! Please verify OTP to continue.'
+        );
       }
-      if (data.email !== email || data.password !== password) {
-        toast.error('incorrect email or password');
-        return;
-      }
-      setActiveScreen('otp-verification');
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
     }
-  });
+  };
 
   return (
-    <div>
-      <FormProvider {...methods}>
-        <form
-          onSubmit={(e) => {
-            e.stopPropagation(); // prevent bubbling to parent form
-            e.preventDefault(); // prevent native form submit
-            handleSubmit(); // run RHF submission
-          }}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="space-y-6 max-w-sm">
+        <div className="mb-8">
+          <h2 className="mb-4 text-2xl font-semibold text-[#202224]">Login</h2>
+          <p className="text-pry-light leading-relaxed">
+            Securely login to manage and monitor access in real time
+          </p>
+        </div>
+        <div className="w-full">
+          <label
+            htmlFor="email"
+            className="block mb-2 text-sm font-medium text-gray-600"
+          >
+            Email address
+          </label>
+          <FormInput name="email" placeholder="Enter email" />
+        </div>
+        <div className="w-full">
+          <label
+            htmlFor="password"
+            className="block mb-2 text-sm font-medium text-gray-600"
+          >
+            Password
+          </label>
+          <FormInput name="password" placeholder="Enter password" />
+        </div>
+        <div className="flex justify-between text-sm text-pry">
+          <p>Remember Password</p>
+          <Link
+            to={'/forgot-password'}
+            className="transition-all duration-300 ease-linear hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
+        <Button
+          variant="primary"
+          size="md"
+          type="submit"
+          className="rounded-lg py-3 w-full disabled:bg-pry-light disabled:cursor-not-allowed"
+          disabled={isLoading}
         >
-          <div className="space-y-6 max-w-sm">
-            <div className="mb-8">
-              <h2 className="mb-4 text-2xl font-semibold text-[#202224]">
-                Login
-              </h2>
-              <p className="text-[#202224] leading-relaxed">
-                Securely login to manage and monitor access in real time
-              </p>
-            </div>
-            <div className="w-full">
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm font-medium text-gray-600"
-              >
-                Email address
-              </label>
-              <FormInput name="email" placeholder="Enter email" />
-            </div>
-            <div className="w-full">
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm font-medium text-gray-600"
-              >
-                Password
-              </label>
-              <FormInput name="password" placeholder="Enter password" />
-            </div>
-            <div className="flex justify-between text-xs text-pry">
-              <p>Remember Password</p>
-              <Link
-                to={'/forgot-password'}
-                className="transition-all duration-300 ease-linear hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <button
-              type="submit"
-              className="bg-pry text-[#fff]  py-3 w-full text-center rounded-lg not-odd:font-medium transition-all duration-300 ease-linear ocus:outline-none focus:ring-1 focus:ring-active text-base cursor-pointer hover:bg-[#24356D]"
-            >
-              Sign In
-            </button>
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+          {isLoading ? (
+            <Spinners variant="dots" size="sm" color="white" label="Wait..." />
+          ) : (
+            'Log In'
+          )}
+        </Button>
+      </div>
+    </form>
   );
 };
 

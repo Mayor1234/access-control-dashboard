@@ -1,27 +1,12 @@
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-
-import {
-  useState,
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-} from 'react';
+import { useState, useMemo, useCallback, type ReactNode } from 'react';
 import Table from '../../../components/table/Table';
 import Pagination from '../../../components/pagination/Pagination';
-
 import FormCheckbox from '../../../components/ui/forms/FormCheckBox';
 import { formatStatusColor } from '../../../shared/helper/formatStatus';
 import MoreActionsDropdown from './MoreActionDropdown';
-
-interface Visitor {
-  id: string;
-  name: string;
-  accessCode: string;
-  hostName: string;
-  dateCreated: string;
-  status: string;
-  more: boolean;
-}
+import type { Invite } from '../../../redux/features/visitors-log/visitorsTypes';
+import Spinners from '../../spinnners/Spinners';
 
 type TableColumn<T> = {
   key: keyof T;
@@ -34,21 +19,25 @@ type FormValues = {
 };
 
 type Props = {
-  filteredVisitors: Visitor[];
-  currentPage: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
+  filteredVisitors: Invite[];
+  totalPages: number;
+  isLoading: boolean;
 };
 
 const VisitorTable: React.FC<Props> = ({
   filteredVisitors,
-  currentPage,
-  setCurrentPage,
+  totalPages,
+  isLoading,
 }) => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Memoize visitors data
+  const visitors = useMemo(() => filteredVisitors, [filteredVisitors]);
 
   const methods = useForm<FormValues>({
     defaultValues: {
-      selectedPositions: filteredVisitors.reduce(
+      selectedPositions: visitors.reduce(
         (acc, item) => ({
           ...acc,
           [item.id]: false,
@@ -61,132 +50,194 @@ const VisitorTable: React.FC<Props> = ({
   const { control, setValue } = methods;
   const selectedPositions = useWatch({ control, name: 'selectedPositions' });
 
-  // Handle select all/deselect all checkbox
-  const handleSelectAll = (checked: boolean) => {
-    const newSelection = filteredVisitors.reduce(
-      (acc, item) => ({ ...acc, [item.id]: checked }),
-      {}
-    );
-    setValue('selectedPositions', newSelection);
-  };
-
-  // Check if all visible rows are selected
-  const allSelected =
-    filteredVisitors.length > 0 &&
-    filteredVisitors.every((item) => selectedPositions[item.id]);
-
-  // Check if some (but not all) rows are selected
-  const indeterminate =
-    !allSelected && filteredVisitors.some((item) => selectedPositions[item.id]);
-
-  const columns: TableColumn<Visitor>[] = [
-    {
-      key: 'name',
-      label: (
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            checked={allSelected}
-            ref={(input) => {
-              if (input) {
-                input.indeterminate = indeterminate;
-              }
-            }}
-            onChange={(e) => handleSelectAll(e.target.checked)}
-            className="appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
-          />
-          <span>Visitors Name</span>
-        </div>
-      ),
-      render: (value, row) => (
-        <div className="flex items-center gap-3">
-          <FormCheckbox<FormValues>
-            name={`selectedPositions.${row.id}`}
-            control={methods.control}
-          />
-          <span className="text-dark-text font-medium font-libre">
-            {value as string}
-          </span>
-        </div>
-      ),
+  // Memoized handlers
+  const handleSelectAll = useCallback(
+    (checked: boolean) => {
+      const newSelection = visitors.reduce(
+        (acc, item) => ({ ...acc, [item.id]: checked }),
+        {}
+      );
+      setValue('selectedPositions', newSelection);
     },
-    {
-      key: 'accessCode',
-      label: 'Access Code',
-      render: (value) => (
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-dark font-medium font-libre text-sm">
-              {value as string}
+    [visitors, setValue]
+  );
+
+  const handleDropdownToggle = useCallback(
+    (id: string) => {
+      setOpenDropdownId(openDropdownId === id ? null : id);
+    },
+    [openDropdownId]
+  );
+
+  const handleDropdownClose = useCallback(() => {
+    setOpenDropdownId(null);
+  }, []);
+
+  // Memoized selection state
+  const { allSelected, indeterminate } = useMemo(() => {
+    const all =
+      visitors.length > 0 &&
+      selectedPositions &&
+      visitors.every((item) => selectedPositions[item.id]);
+
+    const some =
+      !all &&
+      selectedPositions &&
+      visitors.some((item) => selectedPositions[item.id]);
+
+    return { allSelected: all, indeterminate: some };
+  }, [visitors, selectedPositions]);
+
+  // Memoized columns
+  const columns: TableColumn<Invite>[] = useMemo(
+    () => [
+      {
+        key: 'id',
+        label: (
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={allSelected || false}
+              ref={(input) => {
+                if (input) {
+                  input.indeterminate = indeterminate || false;
+                }
+              }}
+              onChange={(e) => handleSelectAll(e.target.checked)}
+              className="appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
+            />
+            <span>Visitors Name</span>
+          </div>
+        ),
+        render: (_, value) => (
+          <div className="flex items-center gap-3">
+            <FormCheckbox<FormValues>
+              name={`selectedPositions.${value.id}`}
+              control={methods.control}
+            />
+            <span className="text-dark-text font-medium font-libre">
+              {value.name}
             </span>
           </div>
-        </div>
-      ),
-    },
-    {
-      key: 'hostName',
-      label: 'Host Name',
-      render: (value) => (
-        <span className="text-dark text-sm font-medium font-libre ">
-          {value as string}
-        </span>
-      ),
-    },
-    {
-      key: 'dateCreated',
-      label: 'Date Created',
-      render: (value) => (
-        <span className="text-dark text-sm font-medium font-libre ">
-          {value as string}
-        </span>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Resident Status',
-      render: (value) => (
-        <span
-          className={`text-${
-            typeof value === 'string' ? value.toLowerCase() : ''
-          } ${formatStatusColor(value as string)} text-xs`}
-        >
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'more',
-      label: 'More',
-      render: (_, row) => (
-        <MoreActionsDropdown
-          residentId={row.id}
-          residentName={row.name}
-          isOpen={openDropdownId === row.id}
-          onToggle={() =>
-            setOpenDropdownId(openDropdownId === row.id ? null : row.id)
-          }
-          onClose={() => setOpenDropdownId(null)}
-        />
-      ),
-    },
-  ];
-
-  return (
-    <section>
-      <FormProvider {...methods}>
-        <div className="border border-border rounded-xl">
-          <div className="mb-5">
-            <Table data={filteredVisitors} columns={columns} />
+        ),
+      },
+      {
+        key: 'id',
+        label: 'Access Code',
+        render: (_, value) => (
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <span className="text-dark font-medium font-libre text-sm">
+                {value.code}
+              </span>
+            </div>
           </div>
-          <Pagination
-            totalPages={Number(20)}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            maxLength={10}
+        ),
+      },
+      {
+        key: 'id',
+        label: 'Host Name',
+        render: (_, value) => (
+          <span className="text-dark text-sm font-medium font-libre">
+            {value.user.first_name}
+          </span>
+        ),
+      },
+      {
+        key: 'id',
+        label: 'Date Created',
+        render: (_, value) => (
+          <span className="text-dark text-sm font-medium font-libre">
+            {value.created_at}
+          </span>
+        ),
+      },
+      {
+        key: 'status',
+        label: 'Resident Status',
+        render: (_, value) => (
+          <span className={`${formatStatusColor(value.status)} text-xs`}>
+            {value.status}
+          </span>
+        ),
+      },
+      {
+        key: 'id',
+        label: 'More',
+        render: (_, row) => (
+          <MoreActionsDropdown
+            residentId={row.id}
+            residentName={row.name}
+            isOpen={openDropdownId === row.id}
+            onToggle={() => handleDropdownToggle(row.id)}
+            onClose={handleDropdownClose}
           />
+        ),
+      },
+    ],
+    [
+      allSelected,
+      indeterminate,
+      handleSelectAll,
+      openDropdownId,
+      methods.control,
+      handleDropdownToggle,
+      handleDropdownClose,
+    ]
+  );
+
+  // Loading state - show spinner in a centered container
+  if (isLoading) {
+    return (
+      <section>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Spinners variant="default" size="xl" color="primary" />
         </div>
-      </FormProvider>
-    </section>
+      </section>
+    );
+  }
+
+  // Empty state - no visitors found
+  if (visitors.length === 0) {
+    return (
+      <section>
+        <div className="border border-border rounded-xl">
+          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
+            <svg
+              className="w-16 h-16 text-pry-light mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <h3 className="text-lg text-pry-light mb-2">No visitors found</h3>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Main content - show table with data
+  return (
+    <FormProvider {...methods}>
+      <div className="border border-border rounded-xl">
+        <div className="mb-5">
+          <Table data={visitors} columns={columns} />
+        </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          maxLength={10}
+        />
+      </div>
+    </FormProvider>
   );
 };
 

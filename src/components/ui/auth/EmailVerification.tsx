@@ -1,27 +1,44 @@
 import React, { useState, useRef, useEffect } from 'react';
-
 import { toast } from 'react-toastify';
 import OtpTimer from '../../../shared/utils/OtpTimer';
+import { useValidateOtpMutation } from '../../../redux/features/auth/authApi';
+import Spinners from '../../spinnners/Spinners';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../redux/app/hook';
+import { setUser } from '../../../redux/features/auth/authSlice';
+import UserStorage from '../../../shared/utils/userStorage';
+import { Button } from '../button/Button';
 
 type LoginStep = 'credentials' | 'otp-verification' | 'success';
 
+interface UserCredential {
+  email: string;
+  password: string;
+}
+
 type Props = {
-  activeScreen: string;
   setActiveScreen: React.Dispatch<React.SetStateAction<LoginStep>>;
+  userCredential: UserCredential;
 };
 
-const EmailVerification: React.FC<Props> = ({ setActiveScreen }) => {
+const EmailVerification: React.FC<Props> = ({ userCredential }) => {
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
-
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
+  const [validateOtp, { isLoading }] = useValidateOtpMutation();
 
-  // Focus first input on component mount
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
 
   const handleInputChange = (index: number, value: string) => {
-    if (value.length > 1) return; // This Prevent multiple characters
+    // Only allow numeric values
+    if (!/^\d*$/.test(value)) return;
+    if (value.length > 1) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -40,28 +57,74 @@ const EmailVerification: React.FC<Props> = ({ setActiveScreen }) => {
     }
   };
 
-  const handleContinue = () => {
+  // Handle paste event
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    const pastedData = e.clipboardData.getData('text').trim();
+
+    // Extract only digits from pasted content
+    const digits = pastedData.replace(/\D/g, '').slice(0, 6);
+
+    if (digits.length === 0) {
+      toast.error('Please paste a valid OTP');
+      return;
+    }
+
+    // Fill the OTP inputs with pasted digits
+    const newOtp = [...otp];
+    for (let i = 0; i < 6; i++) {
+      newOtp[i] = digits[i] || '';
+    }
+    setOtp(newOtp);
+
+    // Focus the last filled input or the first empty one
+    const lastFilledIndex = Math.min(digits.length - 1, 5);
+    inputRefs.current[lastFilledIndex]?.focus();
+
+    // Optional: Show success message
+    if (digits.length === 6) {
+      toast.success('OTP pasted successfully');
+    }
+  };
+
+  const handleContinue = async () => {
     const otpValue = otp.join('');
 
-    const otpNumber = '232323';
-    if (!otpValue) {
-      toast.error('Enter OTP to continue');
+    if (!userCredential.email || !userCredential.password || !otpValue) {
+      toast.error('Invalid credentials');
       return;
     }
 
     if (otpValue.length !== 6) {
-      toast.error('Incomplete Otp');
+      toast.error('Incomplete OTP');
       return;
     }
 
-    if (otpValue !== otpNumber) {
-      toast.error('Incorrect Otp!');
-      return;
-    }
-    // Handle verification logic here
-    toast.success('Email verification successful');
+    try {
+      const response = await validateOtp({
+        email: userCredential.email,
+        password: userCredential.password,
+        otp: otpValue,
+      }).unwrap();
 
-    setActiveScreen('success');
+      if (response.status === 'success') {
+        toast.success(
+          response.message || 'Login successful! Please verify OTP to continue.'
+        );
+        dispatch(
+          setUser({
+            data: response.data,
+            token: response.token,
+          })
+        );
+        UserStorage.setCommunityAdminId(response.data.id);
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Login failed. Please check your network and try again.');
+    }
   };
 
   return (
@@ -69,7 +132,7 @@ const EmailVerification: React.FC<Props> = ({ setActiveScreen }) => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-[#202224] mb-4">OTP</h1>
-        <p className="text-[#202224] leading-relaxed">
+        <p className="text-pry-light leading-relaxed">
           Enter the code we've sent to your Email
           <br />
           and proceed
@@ -95,6 +158,7 @@ const EmailVerification: React.FC<Props> = ({ setActiveScreen }) => {
               value={digit}
               onChange={(e) => handleInputChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
+              onPaste={handlePaste}
               className="w-11 h-11 text-center text-lg font-medium border border-[#848484] rounded-xl focus:border-active focus:outline-none focus:ring-1 focus:ring-active transition-colors"
             />
           ))}
@@ -102,13 +166,20 @@ const EmailVerification: React.FC<Props> = ({ setActiveScreen }) => {
         <OtpTimer />
       </div>
 
-      <button
+      <Button
+        variant="primary"
+        size="md"
         type="submit"
-        className="bg-pry text-[#fff] py-3 w-full text-center rounded-lg not-odd:font-medium transition-all duration-300 ease-linear focus:outline-none focus:ring-1 focus:ring-active text-sm cursor-pointer hover:bg-[#24356D]"
+        className="rounded-lg py-3 w-full disabled:bg-pry-light disabled:cursor-not-allowed"
+        disabled={isLoading}
         onClick={handleContinue}
       >
-        Continue
-      </button>
+        {isLoading ? (
+          <Spinners variant="dots" size="sm" color="white" label="Wait..." />
+        ) : (
+          'Continue'
+        )}
+      </Button>
     </div>
   );
 };

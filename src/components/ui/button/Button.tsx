@@ -14,6 +14,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
+  type?: 'button' | 'submit' | 'reset' | undefined;
   href?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -25,6 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   loading = false,
   disabled,
+  type = 'button',
   href,
   leftIcon,
   rightIcon,
@@ -84,7 +86,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      type="button"
+      type={type}
       disabled={isDisabled}
       className={cn(
         baseClasses,

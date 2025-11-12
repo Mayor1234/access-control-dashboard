@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, type ReactNode } from 'react';
 import { PiExport } from 'react-icons/pi';
 import { Button } from '../button/Button';
+import FilterDropdown from './FilterDropdown';
 // Define types for our component
 interface SearchFilter {
   id: string;
@@ -14,6 +15,7 @@ interface SearchComponentProps {
   filters?: SearchFilter[];
   debounceTime?: number;
   className?: string;
+  children?: ReactNode;
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = ({
@@ -22,12 +24,13 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
   // filters = [],
   //   debounceTime = 300,
   className = '',
+  children,
 }) => {
   const [query, setQuery] = useState('');
   //   const [selectedFilters, setSelectedFilters] = useState<
   //     Record<string, string>
   //   >({});
-  //   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const filtersRef = useRef<HTMLDivElement>(null);
 
   //   // Debounce the search to avoid too many requests
@@ -59,41 +62,13 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
   //   }, []);
 
   return (
-    <div className={`relative ${className}`} ref={filtersRef}>
-      <div className="flex items-center space-x-2">
-        <div className="relative text-gray-400 w-[320px] text-sm">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={placeholder}
-            className="w-full px-8 py-2 text-pry-text border border-[#D0D5DD] outline-none rounded-lg transition duration-300 ease-linear hover:ring focus:ring-pry-text"
-          />
-        </div>
-        {/* Filter Toggle Button */}
-        {/* {filters.length > 0 && ( */}
-
-        <Button
-          variant="outline"
-          size="md"
-          leftIcon={
+    <div className={`relative ${className} w-full`} ref={filtersRef}>
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <div className="relative text-gray-400 w-[320px] text-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
+              className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -102,24 +77,68 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          }
-          className="text-pry-text border border-[#D0D5DD] rounded-lg"
-        >
-          Filter
-        </Button>
-        <Button
-          variant="outline"
-          size="md"
-          leftIcon={<PiExport size={16} />}
-          className="text-pry-text border border-[#D0D5DD] rounded-lg"
-        >
-          Export
-        </Button>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={placeholder}
+              className="w-full px-8 py-2 text-pry-text border border-[#D0D5DD] outline-none rounded-lg transition duration-300 ease-linear hover:ring focus:ring-pry-text"
+            />
+          </div>
+          {/* Filter Toggle Button */}
+          {/* {filters.length > 0 && ( */}
 
-        {/* // )} */}
+          <div className="relative inset-0">
+            <Button
+              variant="outline"
+              size="md"
+              leftIcon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+              }
+              className="text-pry-text border border-[#D0D5DD] rounded-lg"
+              onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            >
+              Filter
+            </Button>
+            {isFiltersOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setIsFiltersOpen(false)}
+                />
+                {/* Dropdown */}
+                <div className="absolute -translate-x-1/2 left-1/2 top-9 mt-2 w-[377px] h-[487px] bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                  <FilterDropdown onClose={() => setIsFiltersOpen(false)} />
+                </div>
+              </>
+            )}
+          </div>
+          <Button
+            variant="outline"
+            size="md"
+            leftIcon={<PiExport size={16} />}
+            className="text-pry-text border border-[#D0D5DD] rounded-lg"
+          >
+            Export
+          </Button>
+        </div>
+        {children && children}
       </div>
     </div>
   );

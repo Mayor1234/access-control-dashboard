@@ -45,7 +45,7 @@ function Table<T extends Record<string, any>>({
                 {columns.map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className="text-gray-600 py-4 px-2 first:pl-5 last:pr-5 max-w-[120px] md:max-w-[200px] whitespace-nowrap capitalize"
+                    className="text-gray-600 py-4 px-2 first:pl-5 last:pr-5 max-w-[120px] md:max-w-[200px] whitespace-nowrap"
                   >
                     <div className="relative">
                       {col.render

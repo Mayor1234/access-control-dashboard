@@ -1,23 +1,38 @@
 import { useMemo, useState } from 'react';
 import Header from '../../components/ui/header/Header';
-import { visitorsData } from '../../constants';
 import TabButton from '../../components/ui/visitor-log/TabButton';
 import VisitorTable from '../../components/ui/visitor-log/VisitorTable';
 import SearchComponent from '../../components/ui/search/SearchComponent';
 import { BsPersonVcard } from 'react-icons/bs';
+import UserStorage from '../../shared/utils/userStorage';
+import { useAppSelector } from '../../redux/app/hook';
+import { useGetEstateInvitesQuery } from '../../redux/features/visitors-log/visitorsLogApi';
+import type { Invite } from '../../redux/features/visitors-log/visitorsTypes';
 
-// import TabButton from './TabButton';
-// import VisitorTable from './VisitorTable';
-
-type Visitor = 'all' | 'upcoming' | 'checked-in' | 'checked-out';
+type Visitor = 'all' | 'pending' | 'checkin' | 'checkout';
 
 const VisitorLog = () => {
   const [activeTab, setActiveTab] = useState<Visitor>('all');
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const community_admin_id = UserStorage.getCommunityAdminId() as string;
+
+  const community_id = useAppSelector(
+    (state) => state.auth.user?.community.id
+  ) as string;
+
+  const { data, isLoading } = useGetEstateInvitesQuery({
+    community_id,
+    community_admin_id,
+  });
+
+  const invitesData = useMemo(
+    () => (data?.data?.data as Invite[]) || [],
+    [data]
+  );
 
   // Filter visitors based on active tab and search term
   const filteredVisitors = useMemo(() => {
-    let filtered = visitorsData;
+    let filtered = invitesData;
 
     // Filter by tab
     if (activeTab !== 'all') {
@@ -34,21 +49,7 @@ const VisitorLog = () => {
     // }
 
     return filtered;
-  }, [activeTab /*searchTerm*/]);
-
-  // // Count visitors by status
-  // const getVisitorCounts = () => {
-  //   const all = visitors.length;
-  //   const upcoming = visitors.filter((v) => v.status === 'upcoming').length;
-  //   const checkedIn = visitors.filter((v) => v.status === 'checked-in').length;
-  //   const checkedOut = visitors.filter(
-  //     (v) => v.status === 'checked-out'
-  //   ).length;
-
-  //   return { all, upcoming, checkedIn, checkedOut };
-  // };
-
-  // const counts = getVisitorCounts();
+  }, [activeTab, invitesData]);
 
   const filters = [
     {
@@ -86,7 +87,41 @@ const VisitorLog = () => {
           </h1>
         </div>
       </Header>
-      <div className="my-5 px-5">
+
+      {/* Header Tabs */}
+      <div className="border-b border-gray-200 px-5 mb-5">
+        <nav className="flex space-x-8">
+          <TabButton
+            label="All Visitors Log"
+            isActive={activeTab === 'all'}
+            onClick={() => {
+              setActiveTab('all');
+            }}
+          />
+          <TabButton
+            label="Upcoming Visitors"
+            isActive={activeTab === 'pending'}
+            onClick={() => {
+              setActiveTab('pending');
+            }}
+          />
+          <TabButton
+            label="Checked-In Visitors"
+            isActive={activeTab === 'checkin'}
+            onClick={() => {
+              setActiveTab('checkin');
+            }}
+          />
+          <TabButton
+            label="Checked-out Visitors"
+            isActive={activeTab === 'checkout'}
+            onClick={() => {
+              setActiveTab('checkout');
+            }}
+          />
+        </nav>
+      </div>
+      <div className="px-5">
         <SearchComponent
           placeholder="Search..."
           onSearch={handleSearch}
@@ -95,53 +130,11 @@ const VisitorLog = () => {
           className="max-w-4xl"
         />
       </div>
-
-      {/* Header Tabs */}
-      <div className="border-b border-gray-200 px-5">
-        <nav className="flex space-x-8">
-          <TabButton
-            // tabKey="all"
-            label="All Visitors Log"
-            isActive={activeTab === 'all'}
-            onClick={() => {
-              setActiveTab('all');
-              setCurrentPage(1);
-            }}
-          />
-          <TabButton
-            // tabKey="upcoming"
-            label="Upcoming Visitors"
-            isActive={activeTab === 'upcoming'}
-            onClick={() => {
-              setActiveTab('upcoming');
-              setCurrentPage(1);
-            }}
-          />
-          <TabButton
-            // tabKey="checked-in"
-            label="Checked-In Visitors"
-            isActive={activeTab === 'checked-in'}
-            onClick={() => {
-              setActiveTab('checked-in');
-              setCurrentPage(1);
-            }}
-          />
-          <TabButton
-            // tabKey="checked-out"
-            label="Checked-out Visitors"
-            isActive={activeTab === 'checked-out'}
-            onClick={() => {
-              setActiveTab('checked-out');
-              setCurrentPage(1);
-            }}
-          />
-        </nav>
-      </div>
       <div className="p-5">
         <VisitorTable
           filteredVisitors={filteredVisitors}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          totalPages={data?.data.meta.totalPages as number}
+          isLoading={isLoading}
         />
       </div>
     </section>

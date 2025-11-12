@@ -45,7 +45,6 @@ const ApprovalOversight = () => {
           onSearch={handleSearch}
           filters={filters}
           debounceTime={400}
-          className="max-w-4xl"
         />
       </div>
       <div className="px-5 mb-5">

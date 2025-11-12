@@ -1,8 +1,9 @@
-import logo from '../../assets/logo/access-logo.png';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import EmailVerification from '../../components/ui/auth/EmailVerification';
 import LoginComponent from '../../components/ui/auth/LoginComponent';
 import SuccessComponent from '../../components/ui/auth/SuccessComponent';
+import logo from '../../assets/logo/access-logo.png';
 import vector from '../../assets/Vector-icon.png';
 import appos from '../../assets/appos.png';
 import vectorL from '../../assets/Vector-l.png';
@@ -10,8 +11,21 @@ import gridIcon from '../../assets/grid-icon.png';
 
 type LoginStep = 'credentials' | 'otp-verification' | 'success';
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const [activeScreen, setActiveScreen] = useState<LoginStep>('credentials');
+
+  const methods = useForm<LoginFormData>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+  const userCredential = methods.getValues();
 
   return (
     <section className="flex items-center justify-center w-screen h-screen relative">
@@ -52,7 +66,7 @@ const Login = () => {
                 to control who comes and goes with ease, ensuring safety,
                 efficiency, and peace of mind for your community or workplace.
               </p>
-              <div className="text-3xl text-mantra-orange self-end">
+              <div className="text-3xl text-mantra-orange mb-5 self-end">
                 <img
                   src={vectorL}
                   alt="appostrophy"
@@ -64,23 +78,23 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="w-1/2 p-10 h-full flex justify-center items-center">
-          <div className="max-w-xl w-[450px] h-[543px] bg-[#fff] rounded-3xl p-10 box-border overflow-hidden md:inset-0 max-h-full inset-x-32 inset-y-32 flex items-center justify-center">
-            {activeScreen === 'credentials' && (
-              <LoginComponent
-                activeScreen={activeScreen}
-                setActiveScreen={setActiveScreen}
-              />
-            )}
-            {activeScreen === 'otp-verification' && (
-              <EmailVerification
-                activeScreen={activeScreen}
-                setActiveScreen={setActiveScreen}
-              />
-            )}
-            {activeScreen === 'success' && <SuccessComponent />}
+        <FormProvider {...methods}>
+          <div className="w-1/2 p-10 h-full flex justify-center items-center">
+            <div className="max-w-xl w-[450px] h-[543px] bg-[#fff] rounded-3xl p-10 box-border overflow-hidden md:inset-0 max-h-full inset-x-32 inset-y-32 flex items-center justify-center">
+              {activeScreen === 'credentials' && (
+                <LoginComponent setActiveScreen={setActiveScreen} />
+              )}
+              {activeScreen === 'otp-verification' && (
+                <EmailVerification
+                  // activeScreen={activeScreen}
+                  setActiveScreen={setActiveScreen}
+                  userCredential={userCredential}
+                />
+              )}
+              {activeScreen === 'success' && <SuccessComponent />}
+            </div>
           </div>
-        </div>
+        </FormProvider>
       </div>
       <div className="absolute bottom-0 left-0">
         <img

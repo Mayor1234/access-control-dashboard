@@ -1,83 +1,32 @@
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import React from 'react';
 
 import { Button } from '../button/Button';
 import { BiArrowBack } from 'react-icons/bi';
 import Header from '../header/Header';
+import { useGetEstateInvitesQuery } from '../../../redux/features/visitors-log/visitorsLogApi';
+import { useAppSelector } from '../../../redux/app/hook';
+import UserStorage from '../../../shared/utils/userStorage';
+import type { Invite } from '../../../redux/features/visitors-log/visitorsTypes';
+import { formatStatusColor } from '../../../shared/helper/formatStatus';
 
-interface VisitorInfo {
-  name: string;
-  phoneNumber: string;
-  status: 'upcoming' | 'checked-in' | 'checked-out';
-  emailAddress: string;
-  purpose: string;
-  accessCode: string;
-  visitDate: string;
-}
+const VisitorInformation = () => {
+  const { id } = useParams();
 
-interface HostInfo {
-  name: string;
-  identificationName: string;
-  phoneNumber: string;
-  emailAddress: string;
-  streetName: string;
-  buildingNumber: string;
-}
+  const community_admin_id = UserStorage.getCommunityAdminId() as string;
 
-interface VisitorInformationProps {
-  visitor?: VisitorInfo;
-  host?: HostInfo;
-}
+  const community_id = useAppSelector(
+    (state) => state.auth.user?.community.id
+  ) as string;
 
-const VisitorInformation: React.FC<VisitorInformationProps> = ({
-  visitor = {
-    name: 'Aniedi Sunday',
-    phoneNumber: '09056000040',
-    status: 'upcoming',
-    emailAddress: 'ekomike247@gmail.com',
-    purpose: 'Family related Issues',
-    accessCode: '#Ref5638898',
-    visitDate: '30th August, 2025',
-  },
-  host = {
-    name: 'Telena Daniel Joshua',
-    identificationName: "Mantra's Residence Lekki",
-    phoneNumber: '08056000040',
-    emailAddress: 'Telena47@gmail.com',
-    streetName: 'Olusola Agbeji Street',
-    buildingNumber: '2A',
-  },
-}) => {
-  //   const { id } = useParams();
+  const { data } = useGetEstateInvitesQuery({
+    community_id,
+    community_admin_id,
+    invite_id: id,
+  });
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'upcoming':
-        return (
-          <span className="inline-flex items-center text-sm font-medium text-orange-600 bg-[#FEF3F2] py-1 px-2 rounded-lg">
-            <div className="w-2 h-2 bg-orange-400 rounded-full mr-2" />
-            Upcoming Visitor
-          </span>
-        );
-      case 'checked-in':
-        return (
-          <span className="inline-flex items-center text-sm font-medium text-green-600">
-            <div className="w-2 h-2 bg-green-400 rounded-full mr-2" />
-            Checked-In
-          </span>
-        );
-      case 'checked-out':
-        return (
-          <span className="inline-flex items-center text-sm font-medium text-gray-600">
-            <div className="w-2 h-2 bg-gray-400 rounded-full mr-2"></div>
-            Checked-Out
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
+  const invitesData = (data?.data.data[0] as Invite) || [];
 
   const InfoRow = ({
     label,
@@ -88,7 +37,7 @@ const VisitorInformation: React.FC<VisitorInformationProps> = ({
   }) => (
     <div className="flex py-3">
       <div className="w-40 text-sm text-gray-500 font-medium">{label}</div>
-      <div className="flex-1 text-sm text-gray-900 font-medium">{value}</div>
+      <div className={`flex-1 text-sm text-gray-900 font-medium`}>{value}</div>
     </div>
   );
 
@@ -108,7 +57,7 @@ const VisitorInformation: React.FC<VisitorInformationProps> = ({
       </Header>
       <div className="w-full max-w-full mx-auto space-y-6">
         {/* Visitor Information Section */}
-        <div className="bg-[#fff] border border-border rounded-lg">
+        <div className="bg-[#fff] border border-border">
           <div className="px-6 py-4 border-b border-border rounded-t-lg">
             <h2 className="text-lg font-medium text-pry-text">
               Visitors Information
@@ -116,19 +65,25 @@ const VisitorInformation: React.FC<VisitorInformationProps> = ({
           </div>
           <div className="px-6 py-4">
             <div className="space-y-1">
-              <InfoRow label="Name" value={visitor.name} />
-              <InfoRow label="Phone Number" value={visitor.phoneNumber} />
-              <InfoRow label="Status" value={getStatusBadge(visitor.status)} />
-              <InfoRow label="Email Address" value={visitor.emailAddress} />
-              <InfoRow label="Purpose" value={visitor.purpose} />
-              <InfoRow label="Access Code" value={visitor.accessCode} />
-              <InfoRow label="Visit Date" value={visitor.visitDate} />
+              <InfoRow label="Name" value={invitesData.name} />
+              <InfoRow label="Phone Number" value={invitesData.mobile_number} />
+              <InfoRow
+                label="Number Of Guests"
+                value={invitesData.no_of_guests}
+              />
+              <InfoRow
+                label="Status"
+                value={formatStatusColor(invitesData.status)}
+              />
+              <InfoRow label="Purpose" value={invitesData.purpose} />
+              <InfoRow label="Access Code" value={invitesData.code} />
+              <InfoRow label="Visit Date" value={invitesData.start_date} />
             </div>
           </div>
         </div>
 
         {/* Host Information Section */}
-        <div className="bg-white border border-border rounded-lg">
+        <div className="bg-white border border-border">
           <div className="px-6 py-4 border-b border-border rounded-t-lg">
             <h2 className="text-lg font-medium text-pry-text">
               Host Information
@@ -136,15 +91,14 @@ const VisitorInformation: React.FC<VisitorInformationProps> = ({
           </div>
           <div className="px-6 py-4">
             <div className="space-y-1">
-              <InfoRow label="Name" value={host.name} />
+              <InfoRow label="Name" value={invitesData?.user?.first_name} />
               <InfoRow
-                label="Identification Name"
-                value={host.identificationName}
+                label="Phone Number"
+                value={invitesData?.user?.mobile_number}
               />
-              <InfoRow label="Phone Number" value={host.phoneNumber} />
-              <InfoRow label="Email Address" value={host.emailAddress} />
-              <InfoRow label="Street Name" value={host.streetName} />
-              <InfoRow label="Building Number" value={host.buildingNumber} />
+              <InfoRow label="Email Address" value={invitesData?.user?.email} />
+              {/* <InfoRow label="Street Name" value={invitesData.streetName} /> */}
+              {/* <InfoRow label="Building Number" value={invitesData.buildingNumber} /> */}
             </div>
           </div>
         </div>

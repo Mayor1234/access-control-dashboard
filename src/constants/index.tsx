@@ -1,26 +1,17 @@
 import {
-  MdNotifications,
+  // MdNotifications,
   MdOutlineHome,
-  MdOutlineWallet,
+  // MdOutlineWallet,
   MdSettings,
   MdVerifiedUser,
-  MdAnalytics,
+  // MdAnalytics,
 } from 'react-icons/md';
 import { BsPersonVcard } from 'react-icons/bs';
 import { HiUsers } from 'react-icons/hi2';
 import { FaUsers } from 'react-icons/fa6';
-import { FcInvite } from 'react-icons/fc';
+// import { FcInvite } from 'react-icons/fc';
 
-// export interface Visitor {
-//   id: string;
-//   name: string;
-//   accessCode: string;
-//   hostName: string;
-//   dateCreated: string;
-//   status: 'upcoming' | 'checked-in' | 'checked-out';
-//   more: boolean;
-// }
-
+// Side Menu Top Nav
 export const sideBarTopMenu = [
   {
     label: 'Dashboard',
@@ -37,33 +28,34 @@ export const sideBarTopMenu = [
     path: '/approval-oversight',
     icon: <HiUsers className="h-5 w-5" />,
   },
-  {
-    label: 'Analytics & Reports',
-    path: '/analytics-reports',
-    icon: <MdAnalytics className="h-5 w-5" />,
-  },
+  // {
+  //   label: 'Analytics & Reports',
+  //   path: '/analytics-reports',
+  //   icon: <MdAnalytics className="h-5 w-5" />,
+  // },
   {
     label: 'Community Management',
     path: '/community-management',
     icon: <FaUsers className="h-5 w-5" />,
   },
-  {
-    label: 'Invites',
-    path: '/invites',
-    icon: <FcInvite className="h-5 w-5" />,
-  },
-  {
-    label: 'Billing & Wallet',
-    path: '/billing-wallet',
-    icon: <MdOutlineWallet className="h-5 w-5" />,
-  },
-  {
-    label: 'Notifications',
-    path: '/notifications',
-    icon: <MdNotifications className="h-5 w-5" />,
-  },
+  // {
+  //   label: 'Invites',
+  //   path: '/invites',
+  //   icon: <FcInvite className="h-5 w-5" />,
+  // },
+  // {
+  //   label: 'Billing & Wallet',
+  //   path: '/billing-wallet',
+  //   icon: <MdOutlineWallet className="h-5 w-5" />,
+  // },
+  // {
+  //   label: 'Notifications',
+  //   path: '/notifications',
+  //   icon: <MdNotifications className="h-5 w-5" />,
+  // },
 ];
 
+// Side Menu bottom Nav
 export const sideBarBottomMenu = [
   {
     label: 'Profile',
@@ -72,8 +64,21 @@ export const sideBarBottomMenu = [
   },
   {
     label: 'Settings',
-    path: '/settings',
     icon: <MdSettings className="h-5 w-5" />,
+    children: [
+      {
+        label: 'Manage Users',
+        path: '/settings/manage-users',
+      },
+      {
+        label: 'User Roles',
+        path: '/settings/user-roles',
+      },
+      // {
+      //   label: 'Workflow',
+      //   path: '/settings/workflow',
+      // },
+    ],
   },
 ];
 
@@ -276,7 +281,7 @@ export const residentsOversight = [
     identificationNo: '#Ref34535',
     phoneNumber: '08045678901',
     streetName: 'Nehita Street',
-    status: 'pending',
+    status: 'active',
     more: false,
   },
   {
@@ -315,7 +320,7 @@ export const communityData = [
     identificationNo: '#Ref34535',
     phoneNumber: '08045678901',
     streetName: 'Nehita Street',
-    status: 'actie',
+    status: 'active',
     more: false,
   },
   {

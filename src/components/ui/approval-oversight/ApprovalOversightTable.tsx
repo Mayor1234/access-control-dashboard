@@ -1,12 +1,14 @@
 import { useState, type ReactNode } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-// import MoreActionsDropdown from '../dashbaord/MoreActionDropdown';
 import FormCheckbox from '../forms/FormCheckBox';
-import { residentsOversight } from '../../../constants';
 import Pagination from '../../pagination/Pagination';
 import Table from '../../table/Table';
 import { formatStatusColor } from '../../../shared/helper/formatStatus';
 import MoreActionsDropdown from './MoreActionDropdown';
+import UserStorage from '../../../shared/utils/userStorage';
+import { useGetEstateResidentsQuery } from '../../../redux/features/dashboard/dashboardApi';
+import type { EstateResident } from '../../../redux/features/dashboard/residentTypes';
+import Spinners from '../../spinnners/Spinners';
 
 type TableColumn<T> = {
   key: keyof T;
@@ -18,17 +20,15 @@ type FormValues = {
   selectedPositions: Record<string, boolean>;
 };
 
-interface Resident {
-  id: string;
-  name: string;
-  identificationNo: string;
-  phoneNumber: string;
-  streetName: string;
-  status: string;
-  more: boolean;
-}
-
 const ApprovalOversightTable = () => {
+  const community_admin_id = UserStorage.getCommunityAdminId() as string;
+
+  const { data, isLoading } = useGetEstateResidentsQuery({
+    community_admin_id,
+  });
+
+  const residentsOversight = (data?.data?.data as EstateResident[]) || [];
+
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -65,9 +65,9 @@ const ApprovalOversightTable = () => {
     !allSelected &&
     residentsOversight.some((item) => selectedPositions[item.id]);
 
-  const columns: TableColumn<Resident>[] = [
+  const columns: TableColumn<EstateResident>[] = [
     {
-      key: 'name',
+      key: 'id',
       label: (
         <div className="flex items-center gap-3">
           <input
@@ -81,53 +81,53 @@ const ApprovalOversightTable = () => {
             onChange={(e) => handleSelectAll(e.target.checked)}
             className="appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
           />
-          <span>Name</span>
+          <span>Resident Names</span>
         </div>
       ),
-      render: (value, row) => (
+      render: (_, row) => (
         <div className="flex items-center gap-3">
           <FormCheckbox<FormValues>
             name={`selectedPositions.${row.id}`}
             control={methods.control}
           />
           <span className="text-dark-text font-medium font-libre">
-            {value as string}
+            {`${row.user.first_name} ${row.user.last_name}`}
           </span>
         </div>
       ),
     },
     {
-      key: 'identificationNo',
+      key: 'id',
       label: 'Identification No',
-      render: (value) => (
+      render: (_, row) => (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <span className="text-dark font-medium font-libre text-sm">
-              {value as string}
+            <span className="text-dark font-medium font-libre text-sm max-w-[200px] truncate">
+              {row.user.id}
             </span>
           </div>
         </div>
       ),
     },
     {
-      key: 'phoneNumber',
+      key: 'id',
       label: 'Phone Number',
-      render: (value) => (
+      render: (_, row) => (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <span className="text-dark font-medium font-libre text-sm">
-              {value as string}
+              {row.user.mobile_number}
             </span>
           </div>
         </div>
       ),
     },
     {
-      key: 'streetName',
-      label: 'Street Name',
-      render: (value) => (
-        <span className="text-dark text-sm font-medium font-libre ">
-          {value as string}
+      key: 'id',
+      label: 'Email',
+      render: (_, row) => (
+        <span className="text-dark text-sm font-medium font-libre">
+          {row.user.email}
         </span>
       ),
     },
@@ -140,17 +140,17 @@ const ApprovalOversightTable = () => {
             typeof value === 'string' ? value.toLowerCase() : ''
           } ${formatStatusColor(value as string)} text-xs`}
         >
-          {value}
+          {value as string}
         </span>
       ),
     },
     {
-      key: 'more',
+      key: 'id',
       label: 'More',
       render: (_, row) => (
         <MoreActionsDropdown
-          residentId={row.id}
-          residentName={row.name}
+          rowData={row}
+          community_admin_id={community_admin_id}
           isOpen={openDropdownId === row.id}
           onToggle={() =>
             setOpenDropdownId(openDropdownId === row.id ? null : row.id)
@@ -161,6 +161,43 @@ const ApprovalOversightTable = () => {
     },
   ];
 
+  // Loading state - show spinner in a centered container
+  if (isLoading) {
+    return (
+      <section>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Spinners variant="default" size="xl" color="primary" />
+        </div>
+      </section>
+    );
+  }
+
+  // Empty state - no visitors found
+  if (residentsOversight.length === 0) {
+    return (
+      <section>
+        <div className="border border-border rounded-xl">
+          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
+            <svg
+              className="w-16 h-16 text-pry-light mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <h3 className="text-lg text-pry-light mb-2">No Resident found</h3>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <FormProvider {...methods}>
       <div className="border border-border rounded-xl">
@@ -168,10 +205,10 @@ const ApprovalOversightTable = () => {
           <Table data={residentsOversight} columns={columns} />
         </div>
         <Pagination
-          totalPages={Number(20)}
+          totalPages={data.data?.meta.totalPages}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
-          maxLength={10}
+          maxLength={data.data?.meta.size}
         />
       </div>
     </FormProvider>

@@ -1,5 +1,5 @@
 import React, { type ReactNode, useEffect } from 'react';
-
+import { motion, AnimatePresence } from 'framer-motion';
 import ReactPortal from './RactPortal';
 import { RiCloseLargeFill } from 'react-icons/ri';
 
@@ -10,7 +10,6 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  // Close the model with the esc key
   useEffect(() => {
     if (!onClose) return;
     const closeOnEscKey = (e: KeyboardEvent) => {
@@ -25,42 +24,71 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   }, [onClose]);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
 
     return (): void => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   return (
     <ReactPortal wrapperId="react-portal-modal-container">
-      <div className="fixed inset-0 z-30 w-full h-screen bg-pry-text/60 pointer-events-auto">
-        <div className="z-40 flex justify-end items-center h-full w-full">
-          {onClose && (
-            <button
-              type="button"
-              className="text-white rounded cursor-pointer text-sm w-fit px-3 py-2 ml-auto inline-flex justify-end items-center transition-all duration-300 ease-in-out absolute z-50 top-5 right-5 md:top-5 md:right-5 hover:text-gray-400 focus:outline-none"
-              data-modal-toggle="defaultModal"
-              aria-label="Close modal"
-              aria-expanded="false"
-              aria-controls="defaultModal"
-              role="button"
-              title="Close modal"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  onClose();
-                }
-              }}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-30 bg-pry-text/60 pointer-events-auto"
               onClick={onClose}
-            >
-              <RiCloseLargeFill className="w-5 h-5" />
-            </button>
-          )}
-          {children}
-        </div>
-      </div>
+            />
+
+            {/* Modal Container */}
+            <div className="fixed inset-0 z-40 pointer-events-none overflow-hidden flex justify-end items-center">
+              {onClose && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  type="button"
+                  className="text-white rounded cursor-pointer text-sm w-fit px-3 py-2 transition-all duration-300 ease-in-out absolute z-50 top-5 right-0 hover:text-gray-400 focus:outline-none pointer-events-auto inline-flex justify-end"
+                  aria-label="Close modal"
+                  onClick={onClose}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      onClose();
+                    }
+                  }}
+                >
+                  <RiCloseLargeFill className="w-5 h-5" />
+                </motion.button>
+              )}
+
+              {/* Modal Content - Full Screen */}
+              <motion.div
+                initial={{ x: '-20%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{
+                  duration: 0.3,
+                  ease: [0.4, 0, 0.2, 1],
+                }}
+                className="w-full h-full pointer-events-auto flex justify-end"
+              >
+                {children}
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
     </ReactPortal>
   );
 };

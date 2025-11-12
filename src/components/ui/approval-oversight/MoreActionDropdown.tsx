@@ -1,14 +1,22 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import type { EstateResident } from '../../../redux/features/dashboard/residentTypes';
+import {
+  useApproveResidentMutation,
+  useRejectResidentMutation,
+} from '../../../redux/features/dashboard/dashboardApi';
+import { toast } from 'react-toastify';
+import Spinners from '../../spinnners/Spinners';
+import { useAppSelector } from '../../../redux/app/hook';
 
 const MoreActionsDropdown = ({
-  residentId,
-  residentName,
+  community_admin_id,
+  rowData,
   isOpen,
   onToggle,
   onClose,
 }: {
-  residentId: string;
-  residentName: string;
+  rowData: EstateResident;
+  community_admin_id: string;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
@@ -18,20 +26,55 @@ const MoreActionsDropdown = ({
   const location = useLocation();
   const { pathname } = location;
 
+  const [approveResident, { isLoading: isApproveLoading }] =
+    useApproveResidentMutation();
+  const [rejectResident, { isLoading: isRejectLoading }] =
+    useRejectResidentMutation();
+
+  const user = useAppSelector((state) => state.auth.user);
+
   const handleViewDetail = () => {
-    console.log(`Viewing details for ${residentName}`);
-    console.log(residentId);
-    navigate(`${pathname}/${residentId}`);
+    console.log(`Viewing details for ${rowData}`);
+    navigate(`${pathname}/${rowData.id}`);
     onClose();
   };
 
-  const handleApproveDetail = () => {
-    console.log(`Approved ${residentName}`);
-    onClose();
+  const handleApproveResident = async () => {
+    if (!user?.community.id) return;
+
+    try {
+      const response = await approveResident({
+        community_id: user?.community.id as string,
+        resident_id: rowData.id,
+        community_admin_id,
+      }).unwrap();
+
+      console.log('Approval response', response);
+      if (response.status === 'success') {
+        toast.success(response.message);
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const handleDeleteResident = () => {
-    console.log(`Deleting ${residentName}`);
-    onClose();
+
+  const handleDeclineResident = async () => {
+    try {
+      const response = await rejectResident({
+        community_id: user?.community.id as string,
+        resident_id: rowData.id,
+        community_admin_id,
+      }).unwrap();
+
+      console.log('Approval response', response);
+      if (response.status === 'success') {
+        toast.success(response.message);
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -57,24 +100,45 @@ const MoreActionsDropdown = ({
           <div className="fixed inset-0 z-10" onClick={onClose} />
           {/* Dropdown */}
           <div className="absolute -right-5 -top-10 mt-2 w-36 h-fit bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-            <div className="py-2 flex flex-col">
+            <div className="flex flex-col">
               <button
                 onClick={handleViewDetail}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
               >
                 View Detail
               </button>
               <button
-                onClick={handleApproveDetail}
-                className="w-full text-left px-4 py-2 text-sm text-[#16B364] hover:bg-gray-100 cursor-pointer"
+                type="button"
+                onClick={handleApproveResident}
+                className="w-full text-left px-4 py-2.5 text-sm text-[#16B364]  transition-all duration-300 ease-linear hover:bg-green-50 cursor-pointer"
+                disabled={isApproveLoading}
               >
-                Approvd
+                {isApproveLoading ? (
+                  <Spinners
+                    variant="default"
+                    size="sm"
+                    color="white"
+                    label="Processing..."
+                  />
+                ) : (
+                  'Approve'
+                )}
               </button>
               <button
-                onClick={handleDeleteResident}
-                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+                type="button"
+                onClick={handleDeclineResident}
+                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
               >
-                Decline
+                {isRejectLoading ? (
+                  <Spinners
+                    variant="default"
+                    size="sm"
+                    color="white"
+                    label="Processing..."
+                  />
+                ) : (
+                  'Decline'
+                )}
               </button>
             </div>
           </div>

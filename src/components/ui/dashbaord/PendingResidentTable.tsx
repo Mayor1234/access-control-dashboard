@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Table from '../../table/Table';
-import { residentsData } from '../../../constants';
 import FormCheckbox from '../forms/FormCheckBox';
 import MoreActionsDropdown from './MoreActionDropdown';
 import Pagination from '../../pagination/Pagination';
 import { formatStatusColor } from '../../../shared/helper/formatStatus';
+import UserStorage from '../../../shared/utils/userStorage';
+import { useGetEstateResidentsQuery } from '../../../redux/features/dashboard/dashboardApi';
+import type { EstateResident } from '../../../redux/features/dashboard/residentTypes';
+import Spinners from '../../spinnners/Spinners';
 
 type TableColumn<T> = {
   key: keyof T;
@@ -18,22 +21,25 @@ type FormValues = {
   selectedPositions: Record<string, boolean>;
 };
 
-export type Residents = {
-  id: string;
-  name: string;
-  phone: string;
-  street: string;
-  status: string;
-  more: boolean;
-};
-
 const PendingResidentTable = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const community_admin_id = UserStorage.getCommunityAdminId() as string;
+
+  const { data, isLoading } = useGetEstateResidentsQuery({
+    community_admin_id,
+    status: 'pending',
+  });
+
+  const pendingResidents = useMemo(
+    () => (data?.data?.data as EstateResident[]) || [],
+    [data?.data?.data]
+  );
+
   const methods = useForm<FormValues>({
     defaultValues: {
-      selectedPositions: residentsData.reduce(
+      selectedPositions: pendingResidents.reduce(
         (acc, item) => ({
           ...acc,
           [item.id]: false,
@@ -48,7 +54,7 @@ const PendingResidentTable = () => {
 
   // Handle select all/deselect all checkbox
   const handleSelectAll = (checked: boolean) => {
-    const newSelection = residentsData.reduce(
+    const newSelection = pendingResidents.reduce(
       (acc, item) => ({ ...acc, [item.id]: checked }),
       {}
     );
@@ -57,16 +63,16 @@ const PendingResidentTable = () => {
 
   // Check if all visible rows are selected
   const allSelected =
-    residentsData.length > 0 &&
-    residentsData.every((item) => selectedPositions[item.id]);
+    pendingResidents.length > 0 &&
+    pendingResidents.every((item) => selectedPositions[item.id]);
 
   // Check if some (but not all) rows are selected
   const indeterminate =
-    !allSelected && residentsData.some((item) => selectedPositions[item.id]);
+    !allSelected && pendingResidents.some((item) => selectedPositions[item.id]);
 
-  const columns: TableColumn<Residents>[] = [
+  const columns: TableColumn<EstateResident>[] = [
     {
-      key: 'name',
+      key: 'id',
       label: (
         <div className="flex items-center gap-3">
           <input
@@ -105,7 +111,7 @@ const PendingResidentTable = () => {
       ),
     },
     {
-      key: 'phone',
+      key: 'id',
       label: 'Phone Number',
       render: (value) => (
         <div className="flex justify-between items-center">
@@ -117,35 +123,25 @@ const PendingResidentTable = () => {
         </div>
       ),
     },
+
     {
-      key: 'street',
-      label: 'Street Name',
-      render: (value) => (
-        <span className="text-dark text-sm font-medium font-libre ">
-          {value as string}
-        </span>
-      ),
-    },
-    {
-      key: 'status',
+      key: 'id',
       label: 'Resident Status',
-      render: (value) => (
+      render: (_, value) => (
         <span
-          className={`text-${
-            typeof value === 'string' ? value.toLowerCase() : ''
-          } ${formatStatusColor(value as string)} text-xs`}
+          className={`
+           ${formatStatusColor(value.status)} text-xs`}
         >
-          {value}
+          {value.status}
         </span>
       ),
     },
     {
-      key: 'more',
+      key: 'id',
       label: 'More',
       render: (_, row) => (
         <MoreActionsDropdown
-          residentId={row.id}
-          residentName={row.name}
+          residentData={row}
           isOpen={openDropdownId === row.id}
           onToggle={() =>
             setOpenDropdownId(openDropdownId === row.id ? null : row.id)
@@ -156,14 +152,55 @@ const PendingResidentTable = () => {
     },
   ];
 
+  // Loading state - show spinner in a centered container
+  if (isLoading) {
+    return (
+      <section>
+        <div className="border border-border rounded-xl">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <Spinners variant="default" size="xl" color="primary" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Empty state - no visitors found
+  if (pendingResidents.length === 0) {
+    return (
+      <section>
+        <div className="border border-border rounded-xl">
+          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
+            <svg
+              className="w-10 h-10 text-pry-light mb-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <h3 className="text-base text-pry-light mb-2">
+              No Pending Resident found
+            </h3>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <FormProvider {...methods}>
       <div className="border border-border rounded-xl">
         <div className="mb-5">
-          <Table data={residentsData} columns={columns} />
+          <Table data={pendingResidents} columns={columns} />
         </div>
         <Pagination
-          totalPages={Number(20)}
+          totalPages={data.data.meta.totalPages as number}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           maxLength={10}
