@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import EmailVerification from '../../components/ui/auth/EmailVerification';
 import LoginComponent from '../../components/ui/auth/LoginComponent';
 import SuccessComponent from '../../components/ui/auth/SuccessComponent';
@@ -11,15 +13,18 @@ import gridIcon from '../../assets/grid-icon.png';
 
 type LoginStep = 'credentials' | 'otp-verification' | 'success';
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+const LoginSchema = z.object({
+  email: z.email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormData = z.infer<typeof LoginSchema>;
 
 const Login = () => {
   const [activeScreen, setActiveScreen] = useState<LoginStep>('credentials');
 
   const methods = useForm<LoginFormData>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -86,7 +91,6 @@ const Login = () => {
               )}
               {activeScreen === 'otp-verification' && (
                 <EmailVerification
-                  // activeScreen={activeScreen}
                   setActiveScreen={setActiveScreen}
                   userCredential={userCredential}
                 />

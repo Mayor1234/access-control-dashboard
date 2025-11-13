@@ -1,7 +1,8 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, type FieldValues } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormInput from '../forms/FormInput';
+
 import { useLoginMutation } from '../../../redux/features/auth/authApi';
 import Spinners from '../../spinnners/Spinners';
 import { Button } from '../button/Button';
@@ -12,24 +13,12 @@ type Props = {
   setActiveScreen: React.Dispatch<React.SetStateAction<LoginStep>>;
 };
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
 const LoginComponent: React.FC<Props> = ({ setActiveScreen }) => {
   const [loginUser, { isLoading }] = useLoginMutation();
-  // const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
-  // const from = location.state?.from?.pathname || '/dashboard';
-  // const [setUserId] = useLocalStorage('user_id', '');
 
-  const {
-    handleSubmit,
-    // formState: { errors },
-  } = useFormContext<LoginFormData>();
+  const { handleSubmit } = useFormContext();
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: FieldValues) => {
     try {
       const response = await loginUser({
         email: data.email,
@@ -56,24 +45,24 @@ const LoginComponent: React.FC<Props> = ({ setActiveScreen }) => {
             Securely login to manage and monitor access in real time
           </p>
         </div>
-        <div className="w-full">
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Email address
-          </label>
-          <FormInput name="email" placeholder="Enter email" />
-        </div>
-        <div className="w-full">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Password
-          </label>
-          <FormInput name="password" placeholder="Enter password" />
-        </div>
+
+        {/* Email Field */}
+        <FormInput
+          name="email"
+          type="email"
+          label="Email address"
+          placeholder="Enter email"
+        />
+
+        {/* Password Field with Toggle */}
+        <FormInput
+          name="password"
+          type="password"
+          label="Password"
+          placeholder="Enter password"
+          showPasswordToggle={true}
+        />
+
         <div className="flex justify-between text-sm text-pry">
           <p>Remember Password</p>
           <Link
@@ -83,6 +72,7 @@ const LoginComponent: React.FC<Props> = ({ setActiveScreen }) => {
             Forgot password?
           </Link>
         </div>
+
         <Button
           variant="primary"
           size="md"

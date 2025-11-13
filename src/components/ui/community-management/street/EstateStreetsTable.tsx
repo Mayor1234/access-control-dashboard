@@ -2,7 +2,6 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import Table from '../../../table/Table';
 import Pagination from '../../../pagination/Pagination';
-// import MoreActionsDropdown from '.././MoreActionsDropdown';
 import FormCheckbox from '../../forms/FormCheckBox';
 import { useGetStreetsQuery } from '../../../../redux/features/community-management/communityApi';
 import type { GetStreet } from '../../../../redux/features/community-management/communityTypes';
@@ -19,7 +18,6 @@ type FormValues = {
 };
 
 const EstateStreetsTable = () => {
-  // const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: streetRespondData, isLoading } = useGetStreetsQuery();
@@ -102,20 +100,6 @@ const EstateStreetsTable = () => {
         </span>
       ),
     },
-    // {
-    //   key: 'id',
-    //   label: 'More',
-    //   render: (_, row) => (
-    //     <MoreActionsDropdown
-    //       data={row}
-    //       isOpen={openDropdownId === row.id}
-    //       onToggle={() =>
-    //         setOpenDropdownId(openDropdownId === row.id ? null : row.id)
-    //       }
-    //       onClose={() => setOpenDropdownId(null)}
-    //     />
-    //   ),
-    // },
   ];
 
   // Loading state - show spinner in a centered container
