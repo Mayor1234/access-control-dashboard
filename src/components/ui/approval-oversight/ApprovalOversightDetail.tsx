@@ -1,10 +1,8 @@
-import { BiArrowBack } from 'react-icons/bi';
 import { Button } from '../button/Button';
 import user from '../../../assets/user-profile.png';
 
 import { MdOutlineClose } from 'react-icons/md';
 import { GoPlus } from 'react-icons/go';
-import Header from '../header/Header';
 
 const ApprovalOversightDetail = ({
   visitor = {
@@ -65,7 +63,7 @@ const ApprovalOversightDetail = ({
 
   return (
     <div>
-      <Header>
+      {/* <Header>
         <div className="flex items-center gap-4">
           <Button
             variant="secondary"
@@ -76,7 +74,7 @@ const ApprovalOversightDetail = ({
           />
           <h2 className="text-xl font-semibold text-pry">Approval Oversight</h2>
         </div>
-      </Header>
+      </Header> */}
       <div className="w-full max-w-full mx-auto space-y-6">
         {/* Visitor Information Section */}
         <div className="bg-[#fff] border border-border rounded-lg">

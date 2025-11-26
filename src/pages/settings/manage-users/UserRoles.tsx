@@ -1,5 +1,3 @@
-import { HiUser } from 'react-icons/hi2';
-import Header from '../../../components/ui/header/Header';
 import SearchComponent from '../../../components/ui/search/SearchComponent';
 import { Button } from '../../../components/ui/button/Button';
 import { GoPlus } from 'react-icons/go';
@@ -67,16 +65,6 @@ const UserRoles = () => {
 
   return (
     <section>
-      <Header>
-        <div className="space-x-2 flex items-center">
-          <div className="bg-linear-to-b from-[#D0D5DD] to-[#fff] p-1 rounded-lg">
-            <HiUser className="h-4 w-4 text-pry" />
-          </div>
-          <h2 className="font-opensans text-xl text-pry font-semibold capitalize">
-            User Roles
-          </h2>
-        </div>
-      </Header>
       <div className="w-full space-y-5 px-5">
         <div className="my-5 w-full">
           <SearchComponent

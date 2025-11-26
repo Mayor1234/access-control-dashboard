@@ -81,11 +81,6 @@ const EmailVerification: React.FC<Props> = ({ userCredential }) => {
     // Focus the last filled input or the first empty one
     const lastFilledIndex = Math.min(digits.length - 1, 5);
     inputRefs.current[lastFilledIndex]?.focus();
-
-    // Optional: Show success message
-    if (digits.length === 6) {
-      toast.success('OTP pasted successfully');
-    }
   };
 
   const handleContinue = async () => {

@@ -47,12 +47,13 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     primary:
-      'bg-button-pry font-libre rounded-full text-light-text hover:bg-button-pry/70 hover:text-light-text',
+      'bg-button-pry font-libre rounded-full text-light-text transition-all duration-300 ease-linear  hover:bg-button-pry/70 hover:text-light-text',
     secondary: 'bg-[#EEF4FE] text-button-pry',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
     outline:
-      'border border-border text-[#343942] font-libre rounded-full hover:bg-gray-100 ',
-    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
+      'border border-border text-[#343942] font-libre rounded-full transition-all duration-300 ease-linear  hover:bg-gray-100 ',
+    ghost:
+      'bg-transparent text-gray-700 transition-all duration-300 ease-linear hover:bg-active/20',
   };
 
   const content = (

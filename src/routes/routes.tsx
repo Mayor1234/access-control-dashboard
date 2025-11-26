@@ -16,7 +16,7 @@ import CommunityManagementDetail from '../components/ui/community-management/Com
 import { Settings } from '../pages/settings/Settings';
 import ManageUsers from '../pages/settings/manage-users/ManageUsers';
 import UserRoles from '../pages/settings/manage-users/UserRoles';
-import Profile from '../pages/profile/Profile';
+// import Profile from '../pages/profile/Profile';
 import { PersistAuth } from '../shared/utils/PersistAuth';
 import ProtectedRoute from '../shared/utils/ProtectedRoute';
 
@@ -55,7 +55,7 @@ export const router = createBrowserRouter(
             />
 
             {/* Profile */}
-            <Route path="profile" element={<Profile />} />
+            {/* <Route path="profile" element={<Profile />} /> */}
 
             {/* Settings with nested routes */}
             <Route path="settings" element={<Settings />}>

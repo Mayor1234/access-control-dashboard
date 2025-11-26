@@ -93,8 +93,10 @@ const VisitorTable: React.FC<Props> = ({
     () => [
       {
         key: 'id',
+        // hideOnMobile: true,
+        // mobileLabel: 'Visitors Name',
         label: (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center sm:gap-3">
             <input
               type="checkbox"
               checked={allSelected || false}
@@ -104,13 +106,13 @@ const VisitorTable: React.FC<Props> = ({
                 }
               }}
               onChange={(e) => handleSelectAll(e.target.checked)}
-              className="appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
+              className="hidden sm:block appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
             />
             <span>Visitors Name</span>
           </div>
         ),
         render: (_, value) => (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center sm:gap-3">
             <FormCheckbox<FormValues>
               name={`selectedPositions.${value.id}`}
               control={methods.control}
@@ -164,6 +166,7 @@ const VisitorTable: React.FC<Props> = ({
       {
         key: 'id',
         label: 'More',
+        hideOnMobile: true,
         render: (_, row) => (
           <MoreActionsDropdown
             residentId={row.id}
@@ -226,9 +229,9 @@ const VisitorTable: React.FC<Props> = ({
   // Main content - show table with data
   return (
     <FormProvider {...methods}>
-      <div className="border border-border rounded-xl">
+      <div className="sm:border border-border rounded-xl">
         <div className="mb-5">
-          <Table data={visitors} columns={columns} />
+          <Table data={visitors} columns={columns} loading={isLoading} />
         </div>
         <Pagination
           totalPages={totalPages}

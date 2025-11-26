@@ -3,16 +3,29 @@ import {
   MdOutlineHome,
   // MdOutlineWallet,
   MdSettings,
-  MdVerifiedUser,
+  // MdVerifiedUser,
   // MdAnalytics,
 } from 'react-icons/md';
 import { BsPersonVcard } from 'react-icons/bs';
 import { HiUsers } from 'react-icons/hi2';
 import { FaUsers } from 'react-icons/fa6';
-// import { FcInvite } from 'react-icons/fc';
+import type { ReactNode } from 'react';
+
+interface MenuItem {
+  icon?: ReactNode;
+  label: string;
+  path: string;
+}
+
+interface MenuItemWithChildren {
+  icon?: ReactNode;
+  label: string;
+  path?: string;
+  children: MenuItem[];
+}
 
 // Side Menu Top Nav
-export const sideBarTopMenu = [
+export const sideBarTopMenu: MenuItem[] = [
   {
     label: 'Dashboard',
     path: '/dashboard',
@@ -28,43 +41,18 @@ export const sideBarTopMenu = [
     path: '/approval-oversight',
     icon: <HiUsers className="h-5 w-5" />,
   },
-  // {
-  //   label: 'Analytics & Reports',
-  //   path: '/analytics-reports',
-  //   icon: <MdAnalytics className="h-5 w-5" />,
-  // },
   {
     label: 'Community Management',
     path: '/community-management',
     icon: <FaUsers className="h-5 w-5" />,
   },
-  // {
-  //   label: 'Invites',
-  //   path: '/invites',
-  //   icon: <FcInvite className="h-5 w-5" />,
-  // },
-  // {
-  //   label: 'Billing & Wallet',
-  //   path: '/billing-wallet',
-  //   icon: <MdOutlineWallet className="h-5 w-5" />,
-  // },
-  // {
-  //   label: 'Notifications',
-  //   path: '/notifications',
-  //   icon: <MdNotifications className="h-5 w-5" />,
-  // },
 ];
 
 // Side Menu bottom Nav
-export const sideBarBottomMenu = [
+export const sideBarBottomMenu: MenuItemWithChildren[] = [
   {
-    label: 'Profile',
-    path: '/profile',
-    icon: <MdVerifiedUser className="h-5 w-5" />,
-  },
-  {
-    label: 'Settings',
     icon: <MdSettings className="h-5 w-5" />,
+    label: 'Settings',
     children: [
       {
         label: 'Manage Users',
@@ -74,10 +62,6 @@ export const sideBarBottomMenu = [
         label: 'User Roles',
         path: '/settings/user-roles',
       },
-      // {
-      //   label: 'Workflow',
-      //   path: '/settings/workflow',
-      // },
     ],
   },
 ];

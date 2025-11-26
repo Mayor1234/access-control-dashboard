@@ -29,7 +29,7 @@ const RenderUserByRoleId = () => {
         </h2>
       </div>
       {/* Center - Role Details */}
-      <div className="space-y-4 px-5">
+      <div className="space-y-4 px-5 max-h-80 overflow-y-auto h-full pb-5">
         {usersWithRole.map((user) => (
           <div key={user.id} className="flex items-center gap-3">
             <div

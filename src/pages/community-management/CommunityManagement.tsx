@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import Header from '../../components/ui/header/Header';
-
 import TabButton from '../../components/ui/visitor-log/TabButton';
-import { FaUsers } from 'react-icons/fa6';
 import EstateStreet from './street/EstateStreet';
 import Building from './building/Building';
 
@@ -16,17 +13,6 @@ const CommunityManagement = () => {
 
   return (
     <section className="h-screen">
-      <Header>
-        <div className="space-x-2 flex items-center">
-          <div className="bg-linear-to-b from-[#D0D5DD] to-[#fff] p-1 rounded-lg">
-            <FaUsers className="h-4 w-4 text-pry" />
-          </div>
-          <h2 className="font-opensans text-xl text-pry font-semibold capitalize">
-            Community Management
-          </h2>
-        </div>
-      </Header>
-
       {/* Header Tabs */}
       <div className="border-b border-gray-200 px-5 mb-5">
         <nav className="flex space-x-8">

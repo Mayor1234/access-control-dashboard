@@ -1,9 +1,163 @@
+// import {
+//   PieChart as RechartsPieChart,
+//   Pie,
+//   Cell,
+//   ResponsiveContainer,
+//   Label,
+// } from 'recharts';
+// import type { DashboardOverviewVisitorPie } from '../../redux/features/dashboard/residentTypes';
+
+// interface Props {
+//   pieData?: DashboardOverviewVisitorPie;
+// }
+
+// const PieChart: React.FC<Props> = ({ pieData }) => {
+//   const checkedIn = pieData?.checked_in_visitors || 0;
+//   const checkedOut = pieData?.checked_out_visitors || 0;
+//   const totalVisitors = checkedIn + checkedOut;
+
+//   const data = [
+//     {
+//       name: 'Checked-In Visitors',
+//       value: checkedIn,
+//       color: '#31C65B',
+//     },
+//     {
+//       name: 'Checked-Out Visitors',
+//       value: checkedOut,
+//       color: '#F5D100',
+//     },
+//   ];
+
+//   const COLORS = ['#31C65B', '#F5D100'];
+
+//   const displayData =
+//     totalVisitors === 0 ? [{ name: 'No Data', value: 1 }] : data;
+
+//   const displayColors = totalVisitors === 0 ? ['#E5E7EB'] : COLORS;
+
+//   const calculatePercentage = (value: number) => {
+//     if (totalVisitors === 0) return 0;
+//     return Math.round((value / totalVisitors) * 100);
+//   };
+
+//   return (
+//     <div className="flex items-center">
+//       {/* Chart Container */}
+//       <div className="flex-1 h-64 relative">
+//         <ResponsiveContainer width="100%" height="100%">
+//           <RechartsPieChart>
+//             <Pie
+//               data={displayData}
+//               cx="50%"
+//               cy="50%"
+//               innerRadius={65}
+//               outerRadius={100}
+//               startAngle={90}
+//               endAngle={450}
+//               paddingAngle={totalVisitors === 0 ? 0 : 5}
+//               dataKey="value"
+//             >
+//               {displayData.map((_, index) => (
+//                 <Cell
+//                   key={`cell-${index}`}
+//                   fill={displayColors[index % displayColors.length]}
+//                 />
+//               ))}
+//               {totalVisitors > 0 && (
+//                 <Label
+//                   value={totalVisitors}
+//                   position="center"
+//                   className="text-3xl font-bold"
+//                   fill="#101346"
+//                 />
+//               )}
+//             </Pie>
+//           </RechartsPieChart>
+//         </ResponsiveContainer>
+
+//         {totalVisitors === 0 && (
+//           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+//             <div className="text-center">
+//               <p className="text-3xl font-bold text-gray-300">0</p>
+//               <p className="text-xs text-gray-400 mt-1">No visitors</p>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Legend with percentages */}
+//       <div className="flex flex-col space-y-6 ml-8">
+//         <div
+//           className={`flex items-center space-x-3 ${
+//             totalVisitors === 0 ? 'opacity-40' : ''
+//           }`}
+//         >
+//           <div
+//             className={`w-1 h-12 rounded ${
+//               totalVisitors === 0 ? 'bg-gray-200' : 'bg-[#31C65B]'
+//             }`}
+//           />
+//           <div>
+//             <p className="text-sm text-gray-500 mb-1">Checked-In Visitors</p>
+//             <div className="flex items-baseline gap-2">
+//               <p
+//                 className={`text-xl font-inter font-bold ${
+//                   totalVisitors === 0 ? 'text-gray-300' : 'text-[#101346]'
+//                 }`}
+//               >
+//                 {checkedIn}
+//               </p>
+//               {totalVisitors > 0 && (
+//                 <span className="text-sm text-gray-400">
+//                   ({calculatePercentage(checkedIn)}%)
+//                 </span>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//         <div
+//           className={`flex items-center space-x-3 ${
+//             totalVisitors === 0 ? 'opacity-50' : ''
+//           }`}
+//         >
+//           <div
+//             className={`w-1 h-12 rounded ${
+//               totalVisitors === 0 ? 'bg-gray-200' : 'bg-[#F5D100]'
+//             }`}
+//           />
+//           <div>
+//             <p className="text-sm text-gray-500 mb-1">Checked-Out Visitors</p>
+//             <div className="flex items-baseline gap-2">
+//               <p
+//                 className={`text-xl font-inter font-bold ${
+//                   totalVisitors === 0 ? 'text-gray-300' : 'text-[#101346]'
+//                 }`}
+//               >
+//                 {checkedOut}
+//               </p>
+//               {totalVisitors > 0 && (
+//                 <span className="text-sm text-gray-400">
+//                   ({calculatePercentage(checkedOut)}%)
+//                 </span>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PieChart;
+
 import {
   PieChart as RechartsPieChart,
   Pie,
   Cell,
   ResponsiveContainer,
   Label,
+  Tooltip,
 } from 'recharts';
 import type { DashboardOverviewVisitorPie } from '../../redux/features/dashboard/residentTypes';
 
@@ -11,12 +165,18 @@ interface Props {
   pieData?: DashboardOverviewVisitorPie;
 }
 
+interface ChartDataItem {
+  name: string;
+  value: number;
+  color?: string;
+}
+
 const PieChart: React.FC<Props> = ({ pieData }) => {
-  const checkedIn = pieData?.checked_in_visitors || 0;
-  const checkedOut = pieData?.checked_out_visitors || 0;
+  const checkedIn = pieData?.checked_in_visitors ?? 0;
+  const checkedOut = pieData?.checked_out_visitors ?? 0;
   const totalVisitors = checkedIn + checkedOut;
 
-  const data = [
+  const data: ChartDataItem[] = [
     {
       name: 'Checked-In Visitors',
       value: checkedIn,
@@ -31,18 +191,35 @@ const PieChart: React.FC<Props> = ({ pieData }) => {
 
   const COLORS = ['#31C65B', '#F5D100'];
 
-  const displayData =
+  // Display empty state data if no visitors
+  const displayData: ChartDataItem[] =
     totalVisitors === 0 ? [{ name: 'No Data', value: 1 }] : data;
 
   const displayColors = totalVisitors === 0 ? ['#E5E7EB'] : COLORS;
 
-  const calculatePercentage = (value: number) => {
+  const calculatePercentage = (value: number): number => {
     if (totalVisitors === 0) return 0;
     return Math.round((value / totalVisitors) * 100);
   };
 
+  // Custom tooltip
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length && totalVisitors > 0) {
+      const data = payload[0];
+      return (
+        <div className="bg-white px-4 py-2 rounded-lg shadow-lg border border-gray-200">
+          <p className="text-sm font-medium text-gray-900">{data.name}</p>
+          <p className="text-sm text-gray-600">
+            {data.value} visitors ({calculatePercentage(data.value)}%)
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="flex items-center">
+    <div className="flex items-center w-full h-full">
       {/* Chart Container */}
       <div className="flex-1 h-64 relative">
         <ResponsiveContainer width="100%" height="100%">
@@ -57,88 +234,104 @@ const PieChart: React.FC<Props> = ({ pieData }) => {
               endAngle={450}
               paddingAngle={totalVisitors === 0 ? 0 : 5}
               dataKey="value"
+              strokeWidth={0}
+              animationBegin={0}
+              animationDuration={800}
+              animationEasing="ease-out"
             >
               {displayData.map((_, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={displayColors[index % displayColors.length]}
+                  className={totalVisitors > 0 ? 'cursor-pointer' : ''}
                 />
               ))}
               {totalVisitors > 0 && (
                 <Label
-                  value={totalVisitors}
+                  value={totalVisitors.toLocaleString()}
                   position="center"
                   className="text-3xl font-bold"
                   fill="#101346"
                 />
               )}
             </Pie>
+            {totalVisitors > 0 && <Tooltip content={<CustomTooltip />} />}
           </RechartsPieChart>
         </ResponsiveContainer>
 
+        {/* Empty State Overlay */}
         {totalVisitors === 0 && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
-              <p className="text-3xl font-bold text-gray-300">0</p>
-              <p className="text-xs text-gray-400 mt-1">No visitors</p>
+              <p className="text-4xl font-bold text-gray-300">0</p>
+              <p className="text-xs text-gray-400 mt-1">No visitors yet</p>
             </div>
           </div>
         )}
       </div>
 
-      {/* Legend with percentages */}
-      <div className="flex flex-col space-y-6 ml-8">
+      {/* Legend with Metrics */}
+      <div className="flex flex-col space-y-6 ml-8 min-w-[150px]">
+        {/* Checked-In Visitors */}
         <div
-          className={`flex items-center space-x-3 ${
+          className={`flex items-center space-x-3 transition-opacity duration-200 ${
             totalVisitors === 0 ? 'opacity-40' : ''
           }`}
         >
           <div
-            className={`w-1 h-12 rounded ${
+            className={`w-1 h-12 rounded transition-colors ${
               totalVisitors === 0 ? 'bg-gray-200' : 'bg-[#31C65B]'
             }`}
+            aria-hidden="true"
           />
           <div>
-            <p className="text-sm text-gray-500 mb-1">Checked-In Visitors</p>
+            <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+              Checked-In
+            </p>
             <div className="flex items-baseline gap-2">
               <p
-                className={`text-xl font-inter font-bold ${
+                className={`text-2xl font-inter font-bold transition-colors ${
                   totalVisitors === 0 ? 'text-gray-300' : 'text-[#101346]'
                 }`}
               >
-                {checkedIn}
+                {checkedIn.toLocaleString()}
               </p>
               {totalVisitors > 0 && (
-                <span className="text-sm text-gray-400">
-                  ({calculatePercentage(checkedIn)}%)
+                <span className="text-xs text-gray-400 font-medium">
+                  {calculatePercentage(checkedIn)}%
                 </span>
               )}
             </div>
           </div>
         </div>
+
+        {/* Checked-Out Visitors */}
         <div
-          className={`flex items-center space-x-3 ${
-            totalVisitors === 0 ? 'opacity-50' : ''
+          className={`flex items-center space-x-3 transition-opacity duration-200 ${
+            totalVisitors === 0 ? 'opacity-40' : ''
           }`}
         >
           <div
-            className={`w-1 h-12 rounded ${
+            className={`w-1 h-12 rounded transition-colors ${
               totalVisitors === 0 ? 'bg-gray-200' : 'bg-[#F5D100]'
             }`}
+            aria-hidden="true"
           />
           <div>
-            <p className="text-sm text-gray-500 mb-1">Checked-Out Visitors</p>
+            <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+              Checked-Out
+            </p>
             <div className="flex items-baseline gap-2">
               <p
-                className={`text-xl font-inter font-bold ${
+                className={`text-2xl font-inter font-bold transition-colors ${
                   totalVisitors === 0 ? 'text-gray-300' : 'text-[#101346]'
                 }`}
               >
-                {checkedOut}
+                {checkedOut.toLocaleString()}
               </p>
               {totalVisitors > 0 && (
-                <span className="text-sm text-gray-400">
-                  ({calculatePercentage(checkedOut)}%)
+                <span className="text-xs text-gray-400 font-medium">
+                  {calculatePercentage(checkedOut)}%
                 </span>
               )}
             </div>

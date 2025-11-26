@@ -26,9 +26,11 @@ const Overview = () => {
   }
 
   return (
-    <div className="border border-[#E6E9EE] rounded-lg w-full h-full">
+    <div className="border border-[#E6E9EE] rounded-lg w-full h-full overflow-hidden">
       <div className="flex items-center justify-between w-full px-5 py-3 border-b border-[#E6E9EE] mb-3">
-        <h2 className="font-opensans font-medium text-lg">Overview</h2>
+        <h2 className="font-opensans font-semibold text-base sm:text-lg">
+          Overview
+        </h2>
         <Button
           variant="primary"
           size="md"
@@ -39,8 +41,9 @@ const Overview = () => {
           6 Months
         </Button>
       </div>
-      <div className="flex items-center justify-between gap-6 w-full p-5">
-        <div className="border border-[#E6E9EE] rounded-lg w-full">
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 p-5">
+        <div className="border border-[#E6E9EE] rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-200">
           <div className="border-l-5 border-[#365B85] rounded-lg p-4 h-full">
             <h2 className="text-[#AFAFAF] font-inter mb-2">Total visitors</h2>
             <p className="text-[#365B85] font-inter font-medium text-2xl">
@@ -48,7 +51,7 @@ const Overview = () => {
             </p>
           </div>
         </div>
-        <div className="border border-[#E6E9EE] rounded-lg w-full">
+        <div className="border border-[#E6E9EE] rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-200">
           <div className="border-l-5 border-[#365B85] rounded-lg p-3 h-full">
             <h2 className="text-[#AFAFAF] font-inter mb-3">Active visitors</h2>
             <p className="text-[#365B85] font-inter font-medium text-2xl">
@@ -56,7 +59,7 @@ const Overview = () => {
             </p>
           </div>
         </div>
-        <div className="border border-[#E6E9EE] rounded-lg w-full">
+        <div className="border border-[#E6E9EE] rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-200">
           <div className="border-l-5 border-[#365B85] rounded-lg p-3 h-full">
             <h2 className="text-[#AFAFAF] font-inter font-medium mb-3">
               Active Residents
@@ -66,10 +69,10 @@ const Overview = () => {
             </p>
           </div>
         </div>
-        <div className="border border-[#E6E9EE] rounded-lg w-full">
+        <div className="border border-[#E6E9EE] rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-200">
           <div className="border-l-5 border-[#365B85] rounded-lg p-3 h-full">
             <h2 className="text-[#AFAFAF] font-inter mb-3">
-              Pending Residents approvals
+              Pending Residents
             </h2>
             <p className="text-[#365B85] font-inter font-medium text-2xl">
               {overviewResponseData?.data.pending_residents ?? 0}

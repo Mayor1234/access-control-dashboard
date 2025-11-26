@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { BiArrowBack } from 'react-icons/bi';
 import { Button } from '../button/Button';
-import Header from '../header/Header';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import user from '../../../assets/user-profile.png';
@@ -65,23 +63,6 @@ const CommunityManagementDetail = ({
   );
   return (
     <div>
-      <div className="h-full">
-        <Header>
-          <div className="flex items-center gap-4">
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<BiArrowBack size={16} />}
-              className="rounded-lg py-2"
-              onClick={() => window.history.back()}
-            />
-
-            <h2 className="text-xl font-semibold text-pry">
-              Community Management
-            </h2>
-          </div>
-        </Header>
-      </div>
       <div className="w-full max-w-full mx-auto space-y-6">
         {/* Visitor Information Section */}
         <div className="bg-[#fff] border border-border rounded-lg">

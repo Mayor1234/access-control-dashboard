@@ -1,23 +1,18 @@
 import { MdNotifications } from 'react-icons/md';
 import userProfile from '../../../assets/user-profile.png';
 import type { ReactNode } from 'react';
+import { MobileMenuToggle } from '../../../layouts/MobileMenuToggle';
 
 type Props = {
   children: ReactNode;
+  setIsSidebarOpen: (isOpen: boolean) => void;
 };
-const Header: React.FC<Props> = ({ children }) => {
+const Header: React.FC<Props> = ({ children, setIsSidebarOpen }) => {
   return (
     <header className="h-20 flex items-center justify-between bg-white p-5 border-b border-border">
-      {/* <div className="space-x-2 flex items-center">
-        <div className="bg-[#D0D5DD] p-1 rounded-lg">
-          <MdOutlineHome className="h-4 w-4" />
-        </div>
-        <h1 className="font-opensans text-xl text-[#101828] font-semibold capitalize">
-          {title}
-        </h1>
-      </div> */}
       <div>{children}</div>
-      <div className="flex items-center gap-2">
+
+      <div className="hidden sm:flex items-center gap-2">
         {/* Notification Icon with Badge */}
         <div className="relative">
           <MdNotifications className="w-5 h-5 cursor-pointer" />
@@ -35,6 +30,7 @@ const Header: React.FC<Props> = ({ children }) => {
           />
         </div>
       </div>
+      <MobileMenuToggle onClick={() => setIsSidebarOpen(true)} />
     </header>
   );
 };
