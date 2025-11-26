@@ -137,25 +137,6 @@ const DailyVisitors = () => {
             className="w-full sm:w-auto"
           />
         </div>
-
-        {/* Mobile Date Picker Dropdown */}
-        {/* {showMobileDatePicker && (
-          <>
-            <div className="">
-              <DatePicker
-                value={selectedDate}
-                onChange={(date) => {
-                  if (date) {
-                    setSelectedDate(date);
-                    setShowMobileDatePicker(false);
-                  }
-                }}
-                placeholder="Choose a date"
-                disabled={isLoading}
-              />
-            </div>
-          </>
-        )} */}
       </div>
 
       {/* Chart Area */}
@@ -163,7 +144,7 @@ const DailyVisitors = () => {
         <div className="h-full w-full min-h-[250px] sm:min-h-[280px]">
           {/* Loading State */}
           {isLoading && (
-            <div className="flex flex-col items-center justify-center h-full gap-3">
+            <div className="flex flex-col items-center justify-center h-full w-full md:h-72 gap-3">
               <Spinners variant="default" size="xl" color="primary" />
               <p className="text-sm text-gray-500">Loading visitor data...</p>
             </div>
@@ -171,7 +152,7 @@ const DailyVisitors = () => {
 
           {/* Error State */}
           {isError && !isLoading && (
-            <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="flex flex-col items-center justify-center h-full w-full md:h-72 text-center px-4">
               <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 text-red-300">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -199,7 +180,7 @@ const DailyVisitors = () => {
 
           {/* Empty State */}
           {!isLoading && !isError && chartData.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="flex flex-col items-center justify-center h-full w-full md:h-72 text-center px-4">
               <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 text-gray-300">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -214,7 +195,7 @@ const DailyVisitors = () => {
                 No visitor data available
               </p>
               <p className="text-gray-500 text-xs sm:text-sm">
-                Try selecting a different month
+                Try selecting a different month.
               </p>
             </div>
           )}

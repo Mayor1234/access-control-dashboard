@@ -181,7 +181,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   };
 
   return (
-    <div className={`relative z-50 ${className}`} ref={containerRef}>
+    <div className={`relative  ${className}`} ref={containerRef}>
       {label && (
         <label className="block mb-2 text-sm font-medium text-pry-text">
           {label}
