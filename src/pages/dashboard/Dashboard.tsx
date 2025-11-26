@@ -8,13 +8,11 @@ const Dashboard = () => {
     <section className="h-screen">
       <div className="p-5">
         <Overview />
-        <div className="flex flex-col md:flex-row justify-between items-center gap-5 my-5">
+        <div className="flex flex-col md:flex-row justify-between gap-5 space-y-5 my-5">
           <DailyVisitors />
           <EstateVisitors />
         </div>
-        <div>
-          <PendingResident />
-        </div>
+        <PendingResident />
       </div>
     </section>
   );

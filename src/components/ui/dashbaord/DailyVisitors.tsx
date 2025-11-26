@@ -73,11 +73,10 @@ import { useGetDashboardOverviewDailyVisitorQuery } from '../../../redux/feature
 import { formatFullDate } from '../../../shared/helper/formatDate';
 import Spinners from '../../spinnners/Spinners';
 import { DatePicker } from '../date-picker/DatePicker';
-// import { HiCalendar } from 'react-icons/hi2';
 
 const DailyVisitors = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [showMobileDatePicker, setShowMobileDatePicker] = useState(false);
+  // const [showMobileDatePicker, setShowMobileDatePicker] = useState(false);
 
   const community = useAppSelector((state) => state.auth.user);
 
@@ -108,7 +107,7 @@ const DailyVisitors = () => {
   const totalVisitors = chartData.reduce((sum, item) => sum + item.visitors, 0);
 
   return (
-    <div className="border border-gray-200 rounded-lg w-full lg:w-[60%] h-full flex flex-col overflow-hidden">
+    <div className="border border-[#E6E9EE] rounded-lg w-full lg:w-[60%] h-96 md:h-full flex flex-col">
       {/* Header */}
       <div className="flex-shrink-0 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-5 py-2 sm:py-3 border-b border-border bg-white">
         {/* Title Section */}
@@ -116,7 +115,7 @@ const DailyVisitors = () => {
           <h2 className="font-opensans font-medium text-sm sm:text-base text-gray-900 whitespace-nowrap">
             Daily Visitors
           </h2>
-          <span className="text-xs sm:text-sm text-gray-500 font-medium">
+          <span className="hidden md:block text-xs sm:text-sm text-gray-500 font-medium">
             ({currentMonthYear})
           </span>
 
@@ -129,7 +128,7 @@ const DailyVisitors = () => {
         </div>
 
         {/* Date Picker - Desktop */}
-        <div className="hidden sm:block">
+        <div className="block">
           <DatePicker
             value={selectedDate}
             onChange={(date) => date && setSelectedDate(date)}
@@ -140,9 +139,9 @@ const DailyVisitors = () => {
         </div>
 
         {/* Mobile Date Picker Dropdown */}
-        {showMobileDatePicker && (
+        {/* {showMobileDatePicker && (
           <>
-            <div className="sm:hidden">
+            <div className="">
               <DatePicker
                 value={selectedDate}
                 onChange={(date) => {
@@ -156,7 +155,7 @@ const DailyVisitors = () => {
               />
             </div>
           </>
-        )}
+        )} */}
       </div>
 
       {/* Chart Area */}
@@ -222,7 +221,7 @@ const DailyVisitors = () => {
 
           {/* Chart Display */}
           {!isLoading && !isError && chartData.length > 0 && (
-            <div className="h-full w-full">
+            <div className="h-full w-full md:h-72">
               <SimpleBar pry="#31C65B" data={chartData} />
 
               {/* Mobile Stats Summary */}

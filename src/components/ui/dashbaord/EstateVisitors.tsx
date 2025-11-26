@@ -76,10 +76,14 @@ const EstateVisitors = () => {
   );
 
   return (
-    <div className="border border-[#E6E9EE] rounded-lg w-full md:w-[40%] h-full">
+    <div className="border border-[#E6E9EE] rounded-lg w-full md:w-[40%] h-full md:h-full overflow-hidden">
       {/* Header */}
       <div className="w-full flex items-center justify-between px-5 py-3 border-b border-[#E6E9EE]">
-        <h2 className="font-opensans font-medium">Estate Visitors</h2>
+        {/* Title Section */}
+        <h2 className="font-opensans font-medium text-sm sm:text-base text-gray-900 whitespace-nowrap">
+          Estate Visitors
+        </h2>
+
         <Button
           variant="outline"
           size="md"
@@ -93,7 +97,7 @@ const EstateVisitors = () => {
       </div>
 
       {/* Content Area */}
-      <div className="h-72 w-full p-5">
+      <div className="h-full w-full p-3 sm:p-5 overflow-hidden">
         {/* Loading State - Skeleton */}
         {isLoading && <PieChartSkeleton />}
 
@@ -154,7 +158,9 @@ const EstateVisitors = () => {
 
         {/* Success State - Show Chart */}
         {!isLoading && !isError && data?.data && (
-          <PieChart pieData={data.data} />
+          <div className="h-full w-full md:h-72">
+            <PieChart pieData={data.data} />
+          </div>
         )}
       </div>
     </div>

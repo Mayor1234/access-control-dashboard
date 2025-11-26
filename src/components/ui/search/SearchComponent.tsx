@@ -167,7 +167,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
           </div>
 
           {/* Children (e.g., "Create New" button) */}
-          {/* {children && <div className="flex-shrink-0">{children}</div>} */}
+          {children && <div className="flex-shrink-0">{children}</div>}
         </div>
       </div>
 
