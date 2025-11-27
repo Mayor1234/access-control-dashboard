@@ -37,7 +37,7 @@ const CommunityManagement = () => {
   ];
 
   return (
-    <section className="min-h-screen flex flex-col bg-gray-50">
+    <section className="min-h-screen flex flex-col">
       {/* Desktop Tabs - Hidden on Mobile */}
       <div className="hidden md:block border-b border-border px-4 lg:px-5 my-5">
         <nav className="flex space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide">
@@ -53,7 +53,7 @@ const CommunityManagement = () => {
       </div>
 
       {/* Mobile Dropdown Tabs */}
-      <div className="md:hidden px-4 py-3 border-b border-gray-200 bg-white">
+      <div className="md:hidden px-4 py-3 border-b border-border bg-white">
         <button
           onClick={() => setShowMobileFilters(!showMobileFilters)}
           className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"

@@ -89,7 +89,7 @@ const SideBar: React.FC<SideBarProps> = ({
       >
         <div className="flex flex-col justify-between items-center h-full pb-10 w-full">
           <div className="w-full h-full">
-            <div className="flex items-start justify-start px-3 py-5 mb-8 bg-pry-light rounded-bl-3xl">
+            <div className="flex items-start justify-start px-3 py-5 mb-5 bg-pry-light rounded-bl-3xl">
               <img
                 src={logo}
                 alt="Mantra logo"
@@ -97,16 +97,6 @@ const SideBar: React.FC<SideBarProps> = ({
                 height={100}
                 className="w-44 h-10"
               />
-              {/* Mobile Close Button
-              {isMobile && (
-                <button
-                  onClick={() => setIsSidebarOpen?.(false)}
-                  className="md:hidden p-2 rounded-lg hover:bg-pry-hover transition-colors"
-                  aria-label="Close menu"
-                >
-                  <MdClose size={24} />
-                </button>
-              )} */}
             </div>
             <nav className="mt-4 space-y-2 px-3">
               {sideBarTopMenu.map((link, i) => {
