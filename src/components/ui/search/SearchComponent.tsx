@@ -113,7 +113,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={placeholder}
-                className="w-full pl-10 pr-4 py-2.5 text-gray-700 border border-gray-300 outline-none rounded-lg transition-all duration-200 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2.5 text-gray-700 border border-gray-300 outline-none rounded-lg transition-all duration-200 ease-linear hover:border-gray-400 focus:ring-2 focus:ring-active focus:border-transparent"
               />
               {query && (
                 <button

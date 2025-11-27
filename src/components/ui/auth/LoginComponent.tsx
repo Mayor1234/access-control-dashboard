@@ -40,7 +40,7 @@ const LoginComponent: React.FC<Props> = ({ setActiveScreen }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <div className="space-y-4 sm:space-y-5 lg:space-y-6 w-full">
         <div className="mb-6 sm:mb-7 lg:mb-8">
-          <h2 className="mb-2 sm:mb-3 lg:mb-4 text-xl sm:text-2xl lg:text-3xl font-semibold text-[#202224]">
+          <h2 className="mb-2 sm:mb-3 lg:mb-4 text-xl md:text-2xl font-semibold text-[#202224]">
             Login
           </h2>
           <p className="text-pry-light leading-relaxed">

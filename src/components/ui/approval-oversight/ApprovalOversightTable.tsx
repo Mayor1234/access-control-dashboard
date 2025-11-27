@@ -79,7 +79,7 @@ const ApprovalOversightTable = () => {
               }
             }}
             onChange={(e) => handleSelectAll(e.target.checked)}
-            className="appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
+            className="hidden sm:block appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
           />
           <span>Resident Names</span>
         </div>
@@ -200,7 +200,7 @@ const ApprovalOversightTable = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="border border-border rounded-xl">
+      <div className="sm:border border-border rounded-xl">
         <div className="mb-5">
           <Table data={residentsOversight} columns={columns} />
         </div>

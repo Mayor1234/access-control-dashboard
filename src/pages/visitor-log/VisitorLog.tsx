@@ -144,11 +144,9 @@
 // export default VisitorLog;
 
 import { useMemo, useState } from 'react';
-// import Header from '../../components/ui/header/Header';
 import TabButton from '../../components/ui/visitor-log/TabButton';
 import VisitorTable from '../../components/ui/visitor-log/VisitorTable';
 import SearchComponent from '../../components/ui/search/SearchComponent';
-// import { BsPersonVcard } from 'react-icons/bs';
 import UserStorage from '../../shared/utils/userStorage';
 import { useAppSelector } from '../../redux/app/hook';
 import { useGetEstateInvitesQuery } from '../../redux/features/visitors-log/visitorsLogApi';
@@ -233,18 +231,6 @@ const VisitorLog = () => {
 
   return (
     <section className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      {/* <Header>
-        <div className="flex items-center gap-2">
-          <div className="bg-gradient-to-b from-[#D0D5DD] to-[#fff] p-1.5 sm:p-2 rounded-lg">
-            <BsPersonVcard className="h-4 w-4 sm:h-5 sm:w-5 text-pry" />
-          </div>
-          <h1 className="font-opensans text-base sm:text-xl text-pry font-semibold">
-            Visitors Log
-          </h1>
-        </div>
-      </Header> */}
-
       {/* Desktop Tabs - Hidden on Mobile */}
       <div className="hidden md:block border-b border-border px-4 lg:px-5">
         <nav className="flex space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide">
@@ -266,10 +252,10 @@ const VisitorLog = () => {
           className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-900">
+            <span className="text-pry-text">
               {tabs.find((tab) => tab.id === activeTab)?.label}
             </span>
-            <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+            <span className="px-2 py-0.5 text-xs bg-pry text-light-text rounded-full">
               {tabs.find((tab) => tab.id === activeTab)?.count}
             </span>
           </div>
@@ -292,16 +278,16 @@ const VisitorLog = () => {
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3 transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? 'bg-pry text-light-text'
+                    : 'text-pry-text hover:bg-gray-100'
                 }`}
               >
-                <span className="font-medium">{tab.label}</span>
+                <span>{tab.label}</span>
                 <span
-                  className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                  className={`px-2 py-0.5 text-xs rounded-full ${
                     activeTab === tab.id
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-gray-100 text-gray-600'
+                      ? 'bg-pry text-light-text'
+                      : 'text-pry-text hover:bg-gray-100'
                   }`}
                 >
                   {tab.count}
