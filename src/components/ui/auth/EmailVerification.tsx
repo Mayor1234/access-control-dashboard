@@ -139,7 +139,7 @@ const EmailVerification: React.FC<Props> = ({ userCredential }) => {
         <label className="block text-gray-700 font-medium mb-4">
           Enter OTP sent
         </label>
-        <div className="flex justify-center gap-5 w-full mb-10">
+        <div className="flex justify-center gap-3 w-full mb-10">
           {otp.map((digit, index) => (
             <input
               key={index}
@@ -154,7 +154,7 @@ const EmailVerification: React.FC<Props> = ({ userCredential }) => {
               onChange={(e) => handleInputChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="w-11 h-11 text-center text-lg font-medium border border-[#848484] rounded-xl focus:border-active focus:outline-none focus:ring-1 focus:ring-active transition-colors"
+              className="w-10 h-10 md:w-11 md:h-11 text-center text-lg font-medium border border-[#848484] rounded-xl focus:border-active focus:outline-none focus:ring-1 focus:ring-active transition-colors"
             />
           ))}
         </div>
