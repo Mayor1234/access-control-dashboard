@@ -123,14 +123,14 @@ const EmailVerification: React.FC<Props> = ({ userCredential }) => {
   };
 
   return (
-    <div>
+    <div className="max-w-sm">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-[#202224] mb-4">OTP</h1>
+      <div className="mb-6 sm:mb-7 lg:mb-8">
+        <h2 className="mb-2 sm:mb-3 lg:mb-4 text-xl sm:text-2xl lg:text-3xl font-semibold text-[#202224]">
+          OTP
+        </h2>
         <p className="text-pry-light leading-relaxed">
-          Enter the code we've sent to your Email
-          <br />
-          and proceed
+          Enter the code we've sent to your Email and proceed
         </p>
       </div>
 

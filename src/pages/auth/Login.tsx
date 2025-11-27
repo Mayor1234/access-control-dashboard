@@ -1,3 +1,120 @@
+// import { useState } from 'react';
+// import { FormProvider, useForm } from 'react-hook-form';
+// import { z } from 'zod';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import EmailVerification from '../../components/ui/auth/EmailVerification';
+// import LoginComponent from '../../components/ui/auth/LoginComponent';
+// import SuccessComponent from '../../components/ui/auth/SuccessComponent';
+// import logo from '../../assets/logo/access-logo.png';
+// import vector from '../../assets/Vector-icon.png';
+// import appos from '../../assets/appos.png';
+// import vectorL from '../../assets/Vector-l.png';
+// import gridIcon from '../../assets/grid-icon.png';
+
+// type LoginStep = 'credentials' | 'otp-verification' | 'success';
+
+// const LoginSchema = z.object({
+//   email: z.email('Invalid email address'),
+//   password: z.string().min(6, 'Password must be at least 6 characters'),
+// });
+
+// type LoginFormData = z.infer<typeof LoginSchema>;
+
+// const Login = () => {
+//   const [activeScreen, setActiveScreen] = useState<LoginStep>('credentials');
+
+//   const methods = useForm<LoginFormData>({
+//     resolver: zodResolver(LoginSchema),
+//     defaultValues: {
+//       email: '',
+//       password: '',
+//     },
+//   });
+//   const userCredential = methods.getValues();
+
+//   return (
+//     <section className="flex items-center justify-center w-screen h-screen relative">
+//       <div className="flex w-full h-full">
+//         <div className="bg-[url('assets/access-bg.jpg')] bg-cover bg-center bg-no-repeat h-screen w-1/2 relative p-10 before:absolute before:inset-0 before:bg-[#24356DE5]/90">
+//           <div className="absolute z-50">
+//             <img
+//               src={logo}
+//               alt="Mantra logo"
+//               width={100}
+//               height={100}
+//               className="w-38 h-10 mb-20"
+//             />
+//             <div className="max-w-[450px] flex flex-col">
+//               <div className="text-3xl text-mantra-orange mb-10 self-end">
+//                 <img
+//                   src={gridIcon}
+//                   alt="appostrophy"
+//                   width={100}
+//                   height={100}
+//                   className="w-16 h-16"
+//                 />
+//               </div>
+//               <div className="text-3xl text-mantra-orange mb-5">
+//                 <img
+//                   src={appos}
+//                   alt="appostrophy"
+//                   width={100}
+//                   height={100}
+//                   className="w-4 h-4"
+//                 />
+//               </div>
+//               <p className="leading-relaxed text-[#fff] text-xl tracking-wide mb-5">
+//                 Experience a new era of security and convenience with our Access
+//                 Control Application
+//                 <br />— a smarter way to manage and monitor entry points. From
+//                 secure QR code check-ins to real-time oversight, we empower you
+//                 to control who comes and goes with ease, ensuring safety,
+//                 efficiency, and peace of mind for your community or workplace.
+//               </p>
+//               <div className="text-3xl text-mantra-orange mb-5 self-end">
+//                 <img
+//                   src={vectorL}
+//                   alt="appostrophy"
+//                   width={100}
+//                   height={100}
+//                   className="w-5 h-5"
+//                 />
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//         <FormProvider {...methods}>
+//           <div className="w-1/2 p-10 h-full flex justify-center items-center">
+//             <div className="max-w-xl w-[450px] h-[543px] bg-[#fff] rounded-3xl p-10 box-border overflow-hidden md:inset-0 max-h-full inset-x-32 inset-y-32 flex items-center justify-center">
+//               {activeScreen === 'credentials' && (
+//                 <LoginComponent setActiveScreen={setActiveScreen} />
+//               )}
+//               {activeScreen === 'otp-verification' && (
+//                 <EmailVerification
+//                   setActiveScreen={setActiveScreen}
+//                   userCredential={userCredential}
+//                 />
+//               )}
+//               {activeScreen === 'success' && <SuccessComponent />}
+//             </div>
+//           </div>
+//         </FormProvider>
+//       </div>
+//       <div className="absolute bottom-0 left-0">
+//         <img
+//           src={vector}
+//           alt="vector"
+//           width={100}
+//           height={100}
+//           className="w-24 h-24"
+//         />
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default Login;
+
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -33,80 +150,102 @@ const Login = () => {
   const userCredential = methods.getValues();
 
   return (
-    <section className="flex items-center justify-center w-screen h-screen relative">
-      <div className="flex w-full h-full">
-        <div className="bg-[url('assets/access-bg.jpg')] bg-cover bg-center bg-no-repeat h-screen w-1/2 relative p-10 before:absolute before:inset-0 before:bg-[#24356DE5]/90">
-          <div className="absolute z-50">
-            <img
-              src={logo}
-              alt="Mantra logo"
-              width={100}
-              height={100}
-              className="w-38 h-10 mb-20"
-            />
-            <div className="max-w-[450px] flex flex-col">
-              <div className="text-3xl text-mantra-orange mb-10 self-end">
+    <section className="flex items-center justify-center w-screen min-h-screen relative overflow-hidden">
+      <div className="flex flex-col lg:flex-row w-full h-full min-h-screen">
+        {/* Left Side - Hero Section */}
+        <div className="relative bg-[url('assets/access-bg.jpg')] bg-cover bg-center bg-no-repeat w-full lg:w-1/2 min-h-[40vh] lg:min-h-screen p-6 sm:p-8 lg:p-10 before:absolute before:inset-0 before:bg-[#24356DE5]/90">
+          <div className="relative z-10 h-full flex flex-col">
+            {/* Logo */}
+            <div className="mb-6 sm:mb-8 lg:mb-20">
+              <img
+                src={logo}
+                alt="Mantra logo"
+                loading="lazy"
+                className="w-32 sm:w-36 lg:w-38 h-8 sm:h-9 lg:h-10"
+              />
+            </div>
+
+            {/* Content - Hidden on mobile, visible on tablet+ */}
+            <div className="hidden md:flex flex-col max-w-[450px] lg:max-w-[500px]">
+              {/* Grid Icon */}
+              <div className="self-end mb-6 lg:mb-10">
                 <img
                   src={gridIcon}
-                  alt="appostrophy"
-                  width={100}
-                  height={100}
-                  className="w-16 h-16"
+                  alt="grid icon"
+                  className="w-12 h-12 lg:w-16 lg:h-16"
                 />
               </div>
-              <div className="text-3xl text-mantra-orange mb-5">
+
+              {/* Apostrophe */}
+              <div className="mb-4 lg:mb-5">
                 <img
                   src={appos}
-                  alt="appostrophy"
-                  width={100}
-                  height={100}
-                  className="w-4 h-4"
+                  alt="apostrophe"
+                  className="w-3 h-3 lg:w-4 lg:h-4"
                 />
               </div>
-              <p className="leading-relaxed text-[#fff] text-xl tracking-wide mb-5">
+
+              {/* Description */}
+              <p className="leading-relaxed text-white text-base lg:text-xl tracking-wide mb-4 lg:mb-5">
                 Experience a new era of security and convenience with our Access
-                Control Application
-                <br />— a smarter way to manage and monitor entry points. From
-                secure QR code check-ins to real-time oversight, we empower you
-                to control who comes and goes with ease, ensuring safety,
-                efficiency, and peace of mind for your community or workplace.
+                Control Application — a smarter way to manage and monitor entry
+                points. From secure QR code check-ins to real-time oversight, we
+                empower you to control who comes and goes with ease, ensuring
+                safety, efficiency, and peace of mind for your community or
+                workplace.
               </p>
-              <div className="text-3xl text-mantra-orange mb-5 self-end">
+
+              {/* Vector L */}
+              <div className="self-end">
                 <img
                   src={vectorL}
-                  alt="appostrophy"
-                  width={100}
-                  height={100}
-                  className="w-5 h-5"
+                  alt="vector"
+                  className="w-4 h-4 lg:w-5 lg:h-5"
                 />
               </div>
             </div>
+
+            {/* Mobile: Simple tagline */}
+            <div className="md:hidden flex flex-col justify-center flex-1">
+              <h1 className="text-white text-2xl sm:text-3xl font-bold mb-3">
+                Secure Access Control
+              </h1>
+              <p className="text-white/90 text-sm sm:text-base">
+                Manage and monitor entry points with ease
+              </p>
+            </div>
           </div>
         </div>
+
+        {/* Right Side - Form Section */}
         <FormProvider {...methods}>
-          <div className="w-1/2 p-10 h-full flex justify-center items-center">
-            <div className="max-w-xl w-[450px] h-[543px] bg-[#fff] rounded-3xl p-10 box-border overflow-hidden md:inset-0 max-h-full inset-x-32 inset-y-32 flex items-center justify-center">
-              {activeScreen === 'credentials' && (
-                <LoginComponent setActiveScreen={setActiveScreen} />
-              )}
-              {activeScreen === 'otp-verification' && (
-                <EmailVerification
-                  setActiveScreen={setActiveScreen}
-                  userCredential={userCredential}
-                />
-              )}
-              {activeScreen === 'success' && <SuccessComponent />}
+          <div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-10 flex items-center justify-center bg-white lg:bg-gray-50">
+            {/* Form Container */}
+            <div className="w-full max-w-md lg:max-w-md bg-white rounded-2xl lg:rounded-3xl shadow-sm lg:shadow-lg p-6 sm:p-8 lg:p-10">
+              {/* Form Content */}
+              <div className="w-full">
+                {activeScreen === 'credentials' && (
+                  <LoginComponent setActiveScreen={setActiveScreen} />
+                )}
+                {activeScreen === 'otp-verification' && (
+                  <EmailVerification
+                    setActiveScreen={setActiveScreen}
+                    userCredential={userCredential}
+                  />
+                )}
+                {activeScreen === 'success' && <SuccessComponent />}
+              </div>
             </div>
           </div>
         </FormProvider>
       </div>
-      <div className="absolute bottom-0 left-0">
+
+      {/* Decorative Vector - Desktop Only */}
+      <div className="hidden lg:block absolute bottom-0 left-0">
         <img
           src={vector}
-          alt="vector"
-          width={100}
-          height={100}
-          className="w-24 h-24"
+          alt="decorative vector"
+          className="w-20 h-20 xl:w-24 xl:h-24"
         />
       </div>
     </section>
