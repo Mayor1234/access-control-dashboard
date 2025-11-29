@@ -95,7 +95,7 @@ const AddFlat: React.FC<Props> = ({ setIsModalOpen }) => {
     <section>
       <div className="flex items-center justify-between mb-8 w-full">
         <h2 className="font-opensans text-xl text-pry font-medium capitalize">
-          Add Building
+          Add Flat
         </h2>
         <button
           type="button"

@@ -73,6 +73,7 @@ import { useGetDashboardOverviewDailyVisitorQuery } from '../../../redux/feature
 import { formatFullDate } from '../../../shared/helper/formatDate';
 import Spinners from '../../spinnners/Spinners';
 import { DatePicker } from '../date-picker/DatePicker';
+import { Button } from '../button/Button';
 
 const DailyVisitors = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -169,12 +170,9 @@ const DailyVisitors = () => {
               <p className="text-gray-500 text-xs sm:text-sm mb-4">
                 Unable to fetch visitor statistics
               </p>
-              <button
-                onClick={() => refetch()}
-                className="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-              >
+              <Button variant="primary" size="sm" onClick={() => refetch()}>
                 Try again
-              </button>
+              </Button>
             </div>
           )}
 

@@ -206,7 +206,7 @@ const ResidentTable = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="border border-border rounded-xl">
+      <div className="sm:border border-border rounded-xl">
         <div className="mb-5">
           <Table data={residentData} columns={columns} />
         </div>

@@ -51,8 +51,8 @@ const MoreActionsDropdown = ({
           {/* Overlay to close when clicking outside */}
           <div className="fixed inset-0 z-10" onClick={onClose} />
           {/* Dropdown */}
-          <div className="absolute -right-5 -top-10 mt-2 w-fit h-fit bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-            <div className="py-2 flex flex-col">
+          <div className="absolute -right-5 -top-10 mt-2 w-44 h-fit bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+            <div className="flex flex-col">
               <button
                 onClick={handleViewDetail}
                 className="w-full text-left px-4 py-2 text-sm text-pry-text hover:bg-gray-100 cursor-pointer"
@@ -63,7 +63,7 @@ const MoreActionsDropdown = ({
                 onClick={handleApproveDetail}
                 className="w-full text-left px-4 py-2 text-sm text-pry-text hover:bg-gray-100 cursor-pointer"
               >
-                Edit Residents Profile
+                Edit Resident Profile
               </button>
               <button
                 onClick={handleDeleteResident}

@@ -103,7 +103,7 @@ const EstateVisitors = () => {
 
         {/* Error State */}
         {isError && !isLoading && (
-          <div className="flex flex-col items-center justify-center h-full text-center">
+          <div className="flex flex-col items-center justify-center h-full w-full md:h-72 text-center px-4">
             <div className="mb-4">
               <svg
                 className="w-16 h-16 text-red-300 mx-auto"
@@ -125,7 +125,7 @@ const EstateVisitors = () => {
             <p className="text-gray-400 text-sm mb-4">
               Unable to fetch visitor statistics
             </p>
-            <Button variant="primary" size="sm" onClick={() => refetch()}>
+            <Button variant="primary" size="md" onClick={() => refetch()}>
               Try again
             </Button>
           </div>

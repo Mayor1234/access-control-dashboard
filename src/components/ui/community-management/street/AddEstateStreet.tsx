@@ -103,7 +103,10 @@ const AddEstateStreet: React.FC<Props> = ({ setIsModalOpen }) => {
                 Street Number (Start)
               </label>
               <div>
-                <FormInput name="streetStart" placeholder="Street Number" />
+                <FormInput
+                  name="streetStart"
+                  placeholder="Start Street Number"
+                />
               </div>
             </div>
             <div className="w-full">
@@ -114,7 +117,7 @@ const AddEstateStreet: React.FC<Props> = ({ setIsModalOpen }) => {
                 Street Number (End)
               </label>
               <div>
-                <FormInput name="streetEnd" placeholder="Street Number" />
+                <FormInput name="streetEnd" placeholder="End Street Number" />
               </div>
             </div>
             <div className="flex justify-end gap-5">
