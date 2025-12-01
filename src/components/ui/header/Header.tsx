@@ -9,7 +9,7 @@ type Props = {
 };
 const Header: React.FC<Props> = ({ children, setIsSidebarOpen }) => {
   return (
-    <header className="h-20 flex items-center justify-between bg-white p-5 border-b border-border">
+    <header className="h-20 sticky top-0 flex items-center justify-between bg-white p-5 border-b border-border">
       <div>{children}</div>
 
       <div className="hidden sm:flex items-center gap-2">

@@ -10,7 +10,7 @@ export const MobileMenuToggle: React.FC<MobileMenuToggleProps> = ({
   return (
     <button
       onClick={onClick}
-      className="md:hidden fixed top-6 right-4 z-30 p-2 bg-pry text-white rounded-lg shadow-lg hover:bg-pry-hover transition-colors"
+      className="md:hidden top-6 right-4 z-30 p-2 bg-pry text-white rounded-lg shadow-lg hover:bg-pry-hover transition-colors"
       aria-label="Open menu"
     >
       <MdMenu size={14} />

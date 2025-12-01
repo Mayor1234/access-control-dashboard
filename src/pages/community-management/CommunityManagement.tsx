@@ -53,7 +53,7 @@ const CommunityManagement = () => {
       </div>
 
       {/* Mobile Dropdown Tabs */}
-      <div className="md:hidden px-4 py-3 border-b border-border bg-white">
+      <div className="md:hidden px-4 py-3 border-b border-border bg-white my-5">
         <button
           onClick={() => setShowMobileFilters(!showMobileFilters)}
           className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"

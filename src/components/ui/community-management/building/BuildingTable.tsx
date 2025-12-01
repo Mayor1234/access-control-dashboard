@@ -83,7 +83,7 @@ const BuildingTable = () => {
               }
             }}
             onChange={(e) => handleSelectAll(e.target.checked)}
-            className="appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
+            className="hidden md:block appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
           />
           <span>Resident Name</span>
         </div>
@@ -131,20 +131,6 @@ const BuildingTable = () => {
         </span>
       ),
     },
-    // {
-    //   key: 'id',
-    //   label: 'More',
-    //   render: (_, row) => (
-    //     <MoreActionsDropdown
-    //       residentData={row}
-    //       isOpen={openDropdownId === row.id}
-    //       onToggle={() =>
-    //         setOpenDropdownId(openDropdownId === row.id ? null : row.id)
-    //       }
-    //       onClose={() => setOpenDropdownId(null)}
-    //     />
-    //   ),
-    // },
   ];
 
   // Loading state - show spinner in a centered container
@@ -174,7 +160,7 @@ const BuildingTable = () => {
   return (
     <section>
       <FormProvider {...methods}>
-        <div className="border border-border rounded-xl">
+        <div className="sm:border border-border rounded-xl">
           <div className="mb-5">
             <Table data={buildingResponseData} columns={columns} />
           </div>

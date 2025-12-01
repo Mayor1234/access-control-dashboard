@@ -211,8 +211,7 @@ const Login = () => {
                 Secure Access Control
               </h1>
               <p className="text-white/90 text-sm sm:text-base capitalize">
-                Seamlessly manage and track activities within your residents
-                community.
+                Seamlessly manage activities within your residents community.
               </p>
             </div>
           </div>
@@ -222,7 +221,7 @@ const Login = () => {
         <FormProvider {...methods}>
           <div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-10 flex items-center justify-center bg-white lg:bg-gray-50">
             {/* Form Container */}
-            <div className="w-full max-w-md lg:max-w-md bg-white rounded-2xl lg:rounded-3xl shadow-md shadow-active/20 p-6 sm:p-8 lg:p-10">
+            <div className="w-full max-w-md lg:max-w-md bg-white rounded-2xl lg:rounded-3xl shadow-md shadow-active/20 p-6 sm:p-8 lg:p-10 -mt-20 md:mt-0 z-40">
               {/* Form Content */}
               <div className="w-full">
                 {activeScreen === 'credentials' && (

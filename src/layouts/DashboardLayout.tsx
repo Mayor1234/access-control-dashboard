@@ -46,8 +46,6 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-white text-gray-800">
-      {/* Mobile Menu Toggle */}
-
       {/* Sidebar */}
       <SideBar
         isSidebarOpen={isSidebarOpen}

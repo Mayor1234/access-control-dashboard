@@ -22,7 +22,7 @@ const RenderUserByRoleId = () => {
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 w-96">
+    <div className="rounded-lg border border-gray-200 w-full md:w-96">
       <div className="flex items-center justify-between mb-5 w-full border-b border-border p-5">
         <h2 className="font-opensans text-lg text-pry font-medium">
           Users with this role

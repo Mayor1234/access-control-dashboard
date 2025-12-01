@@ -131,8 +131,8 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
                 <Button
                   variant="outline"
                   size="md"
-                  leftIcon={<HiOutlineFilter className="h-4 w-4" />}
-                  className="text-gray-700 border-gray-300 rounded-lg whitespace-nowrap hover:bg-gray-50"
+                  leftIcon={<HiOutlineFilter size={16} />}
+                  className="text-gray-700 py-2 md:py-2.5 border-gray-300 rounded-lg whitespace-nowrap hover:bg-gray-50"
                   onClick={() => setIsFiltersOpen(!isFiltersOpen)}
                 >
                   <span className="hidden lg:inline">Filter</span>
@@ -158,7 +158,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
                 variant="outline"
                 size="md"
                 leftIcon={<PiExport size={16} />}
-                className="text-gray-700 border-gray-300 rounded-lg whitespace-nowrap hover:bg-gray-50"
+                className="text-gray-700 py-2 md:py-2.5 border-gray-300 rounded-lg whitespace-nowrap hover:bg-gray-50"
                 onClick={onExport}
               >
                 <span className="hidden lg:inline">Export</span>
@@ -191,10 +191,10 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
               {showFilter && filters.length > 0 && (
                 <button
                   onClick={() => setIsFiltersOpen(true)}
-                  className="p-2.5 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="p-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                   aria-label="Open filters"
                 >
-                  <HiOutlineFilter className="h-5 w-5" />
+                  <HiOutlineFilter size={16} />
                 </button>
               )}
 
@@ -202,10 +202,10 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
               {showExport && (
                 <button
                   onClick={onExport}
-                  className="p-2.5 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="p-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                   aria-label="Export"
                 >
-                  <PiExport className="h-5 w-5" />
+                  <PiExport size={16} />
                 </button>
               )}
             </div>
@@ -213,7 +213,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
         ) : (
           /* Expanded Search State */
 
-          <div className="">
+          <div className="w-full">
             <div className="relative">
               <HiOutlineSearch className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
