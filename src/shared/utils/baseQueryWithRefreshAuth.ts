@@ -18,7 +18,7 @@ export const baseQueryWithRefreshAuth: BaseQueryFn<
 
   // If access token is expired (403 Unauthorized), attempt refresh
   if (result.error && result.error.status === 403) {
-    const community_admin_id = UserStorage.getCommunityAdminId();
+    const community_admin_id = UserStorage.getUserId() || '';
     if (!community_admin_id) {
       // api.dispatch(setLogout());
       return result;

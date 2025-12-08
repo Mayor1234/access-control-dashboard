@@ -7,7 +7,7 @@ import { useLoginMutation } from '../../../redux/features/auth/authApi';
 import Spinners from '../../spinnners/Spinners';
 import { Button } from '../button/Button';
 
-type LoginStep = 'credentials' | 'otp-verification' | 'success';
+type LoginStep = 'credentials' | 'otp-verification';
 
 type Props = {
   setActiveScreen: React.Dispatch<React.SetStateAction<LoginStep>>;

@@ -8,11 +8,11 @@ import {
   useAddBuildingMutation,
   useGetStreetsQuery,
 } from '../../../../redux/features/community-management/communityApi';
-import { useAppSelector } from '../../../../redux/app/hook';
 import { toast } from 'react-toastify';
 import Spinners from '../../../spinnners/Spinners';
 import type { GetStreet } from '../../../../redux/features/community-management/communityTypes';
 import SelectStreetButton from './SelectStreetButton';
+import UserStorage from '../../../../shared/utils/userStorage';
 
 type Props = {
   setIsModalOpen: () => void;
@@ -39,7 +39,8 @@ const buildingSchema = z.object({
 type BuildingFormData = z.infer<typeof buildingSchema>;
 
 const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data: streetsResponseData } = useGetStreetsQuery();
 
@@ -57,10 +58,11 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
   const description = methods.watch('description');
 
   // Check if form is valid
-  const isFormValid = selectedStreet && description && community;
+  const isFormValid =
+    selectedStreet && description && community_id && community_user_id;
 
   const handleSubmit = methods.handleSubmit(async (data) => {
-    if (!community) {
+    if (!community_id || !community_user_id) {
       toast.error('Session expired. Please log in again.');
       return;
     }
@@ -72,8 +74,8 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
 
     try {
       const response = await addBuilding({
-        community_id: community.community.id,
-        community_user_id: community.id,
+        community_id,
+        community_user_id,
         street_id: data.street.id,
         description: data.description,
       }).unwrap();

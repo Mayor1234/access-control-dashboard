@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import React from 'react';
 import { Button } from '../button/Button';
 import { useGetEstateInvitesQuery } from '../../../redux/features/visitors-log/visitorsLogApi';
-import { useAppSelector } from '../../../redux/app/hook';
 import UserStorage from '../../../shared/utils/userStorage';
 import type { Invite } from '../../../redux/features/visitors-log/visitorsTypes';
 import { formatStatusColor } from '../../../shared/helper/formatStatus';
@@ -10,10 +9,8 @@ import { formatStatusColor } from '../../../shared/helper/formatStatus';
 const VisitorInformation = () => {
   const { id } = useParams();
 
-  const community_admin_id = UserStorage.getCommunityAdminId() as string;
-  const community_id = useAppSelector(
-    (state) => state.auth.user?.community.id
-  ) as string;
+  const community_admin_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data, isLoading, isError, error } = useGetEstateInvitesQuery({
     community_id,

@@ -1,14 +1,16 @@
-import { useAppSelector } from '../../../redux/app/hook';
 import { useGetAdminUsersQuery } from '../../../redux/features/settings/settingsApi';
+import UserStorage from '../../../shared/utils/userStorage';
 import Spinners from '../../spinnners/Spinners';
 
 const RenderUserByRoleId = () => {
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
+  const community_role_id = UserStorage.getRoleId() ?? '';
 
   const { data, isLoading } = useGetAdminUsersQuery({
-    community_id: community?.community.id || '',
-    community_user_id: community?.id || '',
-    community_role_id: community?.role.id || '',
+    community_id: community_id,
+    community_user_id,
+    community_role_id,
   });
 
   const usersWithRole = data?.data.data || [];
@@ -16,7 +18,7 @@ const RenderUserByRoleId = () => {
   if (isLoading) {
     return (
       <div className="rounded-lg border border-border flex-1 flex items-center justify-center min-h-[200px]">
-        <Spinners variant="default" size="lg" color="primary" />
+        <Spinners variant="default" size="xl" color="primary" />
       </div>
     );
   }

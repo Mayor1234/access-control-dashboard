@@ -8,11 +8,11 @@ import {
   useAddFlatMutation,
   useGetBuildingsQuery,
 } from '../../../../redux/features/community-management/communityApi';
-import { useAppSelector } from '../../../../redux/app/hook';
 import { toast } from 'react-toastify';
 import Spinners from '../../../spinnners/Spinners';
 import type { GetBuilding } from '../../../../redux/features/community-management/communityTypes';
 import SelectBuildingButton from './SelectBuildingButton';
+import UserStorage from '../../../../shared/utils/userStorage';
 
 type Props = {
   setIsModalOpen: () => void;
@@ -39,10 +39,11 @@ const FlatSchema = z.object({
 type FlatFormData = z.infer<typeof FlatSchema>;
 
 const AddFlat: React.FC<Props> = ({ setIsModalOpen }) => {
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data: buildingsResponseData } = useGetBuildingsQuery({
-    community_id: community?.community.id as string,
+    community_id,
   });
 
   const [addFlat, { isLoading }] = useAddFlatMutation();
@@ -60,10 +61,11 @@ const AddFlat: React.FC<Props> = ({ setIsModalOpen }) => {
   const description = methods.watch('description');
 
   // Check if form is valid
-  const isFormValid = selectedBuilding && description && community;
+  const isFormValid =
+    selectedBuilding && description && community_id && community_user_id;
 
   const handleSubmit = methods.handleSubmit(async (data) => {
-    if (!community) {
+    if (!community_id || !community_user_id) {
       toast.error('Session expired. Please log in again.');
       return;
     }
@@ -75,8 +77,8 @@ const AddFlat: React.FC<Props> = ({ setIsModalOpen }) => {
 
     try {
       const response = await addFlat({
-        community_id: community.community.id,
-        community_user_id: community.id,
+        community_id,
+        community_user_id,
         building_id: data.building.id,
         description: data.description,
       }).unwrap();

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo/menu-logo.png';
 import { MdPowerSettingsNew, MdSettings } from 'react-icons/md';
 import { sideBarBottomMenu, sideBarTopMenu } from '../../constants';
 import { Button } from '../ui/button/Button';
+import { setLogout } from '../../redux/features/auth/authSlice';
+import { useAppDispatch } from '../../redux/app/hook';
 
 interface SideBarProps {
   isSidebarOpen: boolean;
@@ -19,6 +21,7 @@ const SideBar: React.FC<SideBarProps> = ({
 
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const dispatch = useAppDispatch();
 
   const isActivePath = (path: string) => location.pathname.startsWith(path);
 
@@ -196,16 +199,17 @@ const SideBar: React.FC<SideBarProps> = ({
               );
             })}
           </div>
-          <Link to={'/'} className="w-full px-3">
+          <div className="w-full px-3">
             <Button
               size="sm"
               type="button"
               className="w-full text-[#fff] flex items-center gap-5 px-3 py-2 font-libre tracking-wide text-sm rounded-2xl hover:bg-active hover:text-dark transition-all duration-300 ease-linear cursor-pointer"
+              onClick={() => dispatch(setLogout())}
             >
               <MdPowerSettingsNew size={20} />
               Log out
             </Button>
-          </Link>
+          </div>
         </div>
       </aside>
     </>

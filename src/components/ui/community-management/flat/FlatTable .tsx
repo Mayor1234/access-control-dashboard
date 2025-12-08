@@ -3,12 +3,12 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import type { GetFlat } from '../../../../redux/features/community-management/communityTypes';
 import FormCheckbox from '../../forms/FormCheckBox';
 import { useGetFlatsQuery } from '../../../../redux/features/community-management/communityApi';
-import { useAppSelector } from '../../../../redux/app/hook';
 import { formatStatusColor } from '../../../../shared/helper/formatStatus';
 import Pagination from '../../../pagination/Pagination';
 import Table from '../../../table/Table';
 // import MoreActionsDropdown from '.././MoreActionsDropdown';
 import Spinners from '../../../spinnners/Spinners';
+import UserStorage from '../../../../shared/utils/userStorage';
 
 type TableColumn<T> = {
   key: keyof T;
@@ -22,12 +22,11 @@ type FormValues = {
 
 const FlatTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  // const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
-  const community = useAppSelector((state) => state.auth.user);
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data, isLoading } = useGetFlatsQuery({
-    community_id: community?.community.id as string,
+    community_id,
   });
 
   const flatResponseData = useMemo(

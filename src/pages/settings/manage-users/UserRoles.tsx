@@ -5,22 +5,23 @@ import { useEffect, useState } from 'react';
 import { MdCheck } from 'react-icons/md';
 import Modal from '../../../components/modal/Modal';
 import AddAdminRole from '../../../components/ui/settings/AddAdminRole';
-import { useAppSelector } from '../../../redux/app/hook';
 import { useGetCommunityAdminRolesQuery } from '../../../redux/features/settings/settingsApi';
 import RenderSelectedRoles from '../../../components/ui/settings/RenderSelectedRoles';
 import Spinners from '../../../components/spinnners/Spinners';
 import RenderUserByRoleId from '../../../components/ui/settings/RenderUserByRoleId';
+import UserStorage from '../../../shared/utils/userStorage';
 
 const UserRoles = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState('');
 
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data: communityRolesResponseData, isLoading: isLoadingRoles } =
     useGetCommunityAdminRolesQuery({
-      community_id: community?.community.id || '',
-      community_user_id: community?.id || '',
+      community_id,
+      community_user_id,
     });
 
   // Auto-select first role when data loads

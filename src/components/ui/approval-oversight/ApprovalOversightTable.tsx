@@ -21,7 +21,8 @@ type FormValues = {
 };
 
 const ApprovalOversightTable = () => {
-  const community_admin_id = UserStorage.getCommunityAdminId() as string;
+  // const community_admin_id = UserStorage.getCommunityAdminId() as string;
+  const community_admin_id = UserStorage.getUserId() ?? '';
 
   const { data, isLoading } = useGetEstateResidentsQuery({
     community_admin_id,

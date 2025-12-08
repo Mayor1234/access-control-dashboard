@@ -5,7 +5,6 @@ import FormInput from '../../forms/FormInput';
 import { Button } from '../../button/Button';
 import { useAddStreetMutation } from '../../../../redux/features/community-management/communityApi';
 import UserStorage from '../../../../shared/utils/userStorage';
-import { useAppSelector } from '../../../../redux/app/hook';
 import { toast } from 'react-toastify';
 import Spinners from '../../../spinnners/Spinners';
 
@@ -20,10 +19,8 @@ type AddFormValues = {
 };
 
 const AddEstateStreet: React.FC<Props> = ({ setIsModalOpen }) => {
-  const community_admin_id = UserStorage.getCommunityAdminId() as string;
-  const community_id = useAppSelector(
-    (state) => state.auth.user?.community.id
-  ) as string;
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const [addStreet, { isLoading }] = useAddStreetMutation();
 
@@ -46,7 +43,7 @@ const AddEstateStreet: React.FC<Props> = ({ setIsModalOpen }) => {
     try {
       const response = await addStreet({
         community_id,
-        community_user_id: community_admin_id,
+        community_user_id,
         name: data.streetName,
         starting_number: data.streetStart,
         ending_number: data.streetEnd,

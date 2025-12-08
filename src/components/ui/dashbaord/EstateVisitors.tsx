@@ -1,66 +1,18 @@
-// import { FaRegCalendarMinus } from 'react-icons/fa6';
-// import PieChart from '../../charts/PieChart';
-// import { Button } from '../button/Button';
-// import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-// import { useGetDashboardOverviewVisitorPieQuery } from '../../../redux/features/dashboard/dashboardApi';
-// import { useAppSelector } from '../../../redux/app/hook';
-// import Spinners from '../../spinnners/Spinners';
-
-// const EstateVisitors = () => {
-//   const community = useAppSelector((state) => state.auth.user);
-
-//   const { data, isLoading } = useGetDashboardOverviewVisitorPieQuery({
-//     community_id: community?.community.id as string,
-//     community_user_id: community?.id as string,
-//   });
-
-//   return (
-//     <div className="border border-[#E6E9EE] rounded-lg w-[40%] h-full">
-//       <div className="w-full flex items-center justify-between px-5 py-3 border-b  border-[#E6E9EE] pb-3">
-//         <h2 className="font-opensans font-medium">Estate Visitors</h2>
-//         <Button
-//           variant="outline"
-//           size="md"
-//           className="rounded-xl py-2"
-//           leftIcon={<FaRegCalendarMinus size={16} />}
-//           rightIcon={<MdOutlineKeyboardArrowDown size={20} />}
-//         >
-//           6 Month
-//         </Button>
-//       </div>
-//       <div className="h-72 w-full p-5">
-//         {isLoading ? (
-//           <div className="flex items-center justify-center h-full">
-//             <Spinners variant="default" size="xl" color="primary" />
-//           </div>
-//         ) : !data ? (
-//           <div className="flex flex-col items-center justify-center h-full text-center">
-//             <p className="text-pry-light mb-2">No visitor data available</p>
-//           </div>
-//         ) : (
-//           <PieChart pieData={data?.data} />
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default EstateVisitors;
-
 import { FaRegCalendarMinus } from 'react-icons/fa6';
 import PieChart from '../../charts/PieChart';
 import { Button } from '../button/Button';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { useGetDashboardOverviewVisitorPieQuery } from '../../../redux/features/dashboard/dashboardApi';
-import { useAppSelector } from '../../../redux/app/hook';
+import UserStorage from '../../../shared/utils/userStorage';
 
 const EstateVisitors = () => {
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data, isLoading, isError, refetch } =
     useGetDashboardOverviewVisitorPieQuery({
-      community_id: community?.community.id as string,
-      community_user_id: community?.id as string,
+      community_id,
+      community_user_id,
     });
 
   // Skeleton Loader for Pie Chart

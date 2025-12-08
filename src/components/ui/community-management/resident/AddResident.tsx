@@ -22,8 +22,6 @@ const AddResident: React.FC<Props> = ({ setIsModalOpen }) => {
   });
 
   const handleSubmit = methods.handleSubmit((data) => {
-    console.log('login credential:', data);
-
     console.log(data);
   });
 

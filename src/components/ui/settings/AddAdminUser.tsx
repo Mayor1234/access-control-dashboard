@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { MdOutlineClose } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { useAppSelector } from '../../../redux/app/hook';
 import FormInput from '../forms/FormInput';
 import { Button } from '../button/Button';
 import Spinners from '../../spinnners/Spinners';
@@ -13,6 +12,7 @@ import {
   useGetCommunityAdminRolesQuery,
 } from '../../../redux/features/settings/settingsApi';
 import type { CommunityAdminRoleApiResponse } from '../../../redux/features/settings/settingsTypes';
+import UserStorage from '../../../shared/utils/userStorage';
 
 type Props = {
   setIsModalOpen: () => void;
@@ -57,12 +57,15 @@ type AdminUserFormData = z.infer<typeof AdminUserSchema>;
 
 const AddAdminUser: React.FC<Props> = ({ setIsModalOpen }) => {
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
-  const community = useAppSelector((state) => state.auth.user);
+
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
+  const community_role_id = UserStorage.getRoleId() ?? '';
 
   const { data: communityRolesResponseData, isLoading: isLoadingRoles } =
     useGetCommunityAdminRolesQuery({
-      community_id: community?.community.id || '',
-      community_user_id: community?.id || '',
+      community_id,
+      community_user_id,
     });
 
   const convertToPermissions = (apiData: CommunityAdminRoleApiResponse) => {
@@ -104,7 +107,8 @@ const AddAdminUser: React.FC<Props> = ({ setIsModalOpen }) => {
     email &&
     description &&
     selectedPermissions.length > 0 &&
-    community;
+    community_id &&
+    community_user_id;
 
   // Toggle permission selection
   const togglePermission = (permission: string) => {
@@ -120,16 +124,16 @@ const AddAdminUser: React.FC<Props> = ({ setIsModalOpen }) => {
   };
 
   const handleSubmit = methods.handleSubmit(async (data) => {
-    if (!community) {
+    if (!community_id && community_user_id) {
       toast.error('Session expired. Please log in again.');
       return;
     }
 
     try {
       const response = await addCommunityAdminUser({
-        community_admin_id: community.id,
-        community_id: community.community.id,
-        community_role_id: community.role.id,
+        community_admin_id: community_user_id,
+        community_id,
+        community_role_id,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,

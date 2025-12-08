@@ -9,6 +9,7 @@ import FormInput from '../forms/FormInput';
 import { Button } from '../button/Button';
 import Spinners from '../../spinnners/Spinners';
 import { useAddCommunityAdminRoleMutation } from '../../../redux/features/settings/settingsApi';
+import UserStorage from '../../../shared/utils/userStorage';
 
 type Props = {
   setIsModalOpen: () => void;
@@ -38,6 +39,10 @@ type AdminUserFormData = z.infer<typeof AdminUserSchema>;
 
 const AddAdminRole: React.FC<Props> = ({ setIsModalOpen }) => {
   const community = useAppSelector((state) => state.auth.user);
+
+  const community_admin_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
+
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
   const [addCommunityAdminRole, { isLoading }] =
@@ -80,8 +85,8 @@ const AddAdminRole: React.FC<Props> = ({ setIsModalOpen }) => {
 
     try {
       const response = await addCommunityAdminRole({
-        community_admin_id: community.id,
-        community_id: community.community.id,
+        community_admin_id,
+        community_id,
         name: data.name,
         description: data.description,
         permissions: data.roles,

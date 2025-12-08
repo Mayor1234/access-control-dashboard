@@ -41,7 +41,8 @@ export const PersistAuth = () => {
       }
 
       // STEP 1: If no community_admin_id found, return
-      const community_admin_id = UserStorage.getCommunityAdminId();
+      // const community_admin_id = UserStorage.getCommunityAdminId();
+      const community_admin_id = UserStorage.getUserId() || '';
 
       if (!community_admin_id) {
         console.log(

@@ -68,23 +68,24 @@
 
 import { useState } from 'react';
 import SimpleBar from '../../charts/SimpleBarChart';
-import { useAppSelector } from '../../../redux/app/hook';
 import { useGetDashboardOverviewDailyVisitorQuery } from '../../../redux/features/dashboard/dashboardApi';
 import { formatFullDate } from '../../../shared/helper/formatDate';
 import Spinners from '../../spinnners/Spinners';
 import { DatePicker } from '../date-picker/DatePicker';
 import { Button } from '../button/Button';
+import UserStorage from '../../../shared/utils/userStorage';
 
 const DailyVisitors = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   // const [showMobileDatePicker, setShowMobileDatePicker] = useState(false);
 
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data, isLoading, isError, refetch } =
     useGetDashboardOverviewDailyVisitorQuery({
-      community_id: community?.community.id as string,
-      community_user_id: community?.id as string,
+      community_id,
+      community_user_id,
       date: selectedDate,
     });
 

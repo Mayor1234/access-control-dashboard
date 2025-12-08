@@ -23,7 +23,7 @@ type FormValues = {
 const ResidentTable = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const community_admin_id = UserStorage.getCommunityAdminId() as string;
+  const community_admin_id = UserStorage.getUserId() ?? '';
 
   const { data: residentDataResponse, isLoading } = useGetEstateResidentsQuery({
     community_admin_id,

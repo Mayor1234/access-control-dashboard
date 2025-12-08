@@ -121,14 +121,13 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import EmailVerification from '../../components/ui/auth/EmailVerification';
 import LoginComponent from '../../components/ui/auth/LoginComponent';
-import SuccessComponent from '../../components/ui/auth/SuccessComponent';
 import logo from '../../assets/logo/access-logo.png';
 import vector from '../../assets/Vector-icon.png';
 import appos from '../../assets/appos.png';
 import vectorL from '../../assets/Vector-l.png';
 import gridIcon from '../../assets/grid-icon.png';
 
-type LoginStep = 'credentials' | 'otp-verification' | 'success';
+type LoginStep = 'credentials' | 'otp-verification';
 
 const LoginSchema = z.object({
   email: z.email('Invalid email address'),
@@ -233,7 +232,6 @@ const Login = () => {
                     userCredential={userCredential}
                   />
                 )}
-                {activeScreen === 'success' && <SuccessComponent />}
               </div>
             </div>
           </div>

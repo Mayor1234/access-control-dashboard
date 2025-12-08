@@ -27,17 +27,14 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.isAuthReady = true;
     },
-
     setLogout: (state) => {
       state.token = null;
       state.user = null;
-      UserStorage.removeCommunityAdminId();
-    },
-    markAuthReady: (state) => {
-      state.isAuthReady = true;
+      state.isAuthReady = false;
+      UserStorage.clear();
     },
   },
 });
 
-export const { setUser, setLogout, markAuthReady } = authSlice.actions;
+export const { setUser, setLogout } = authSlice.actions;
 export default authSlice.reducer;

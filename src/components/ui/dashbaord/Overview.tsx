@@ -2,16 +2,18 @@ import { Button } from '../button/Button';
 import { FaRegCalendarMinus } from 'react-icons/fa';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { useGetDashboardOverviewQuery } from '../../../redux/features/dashboard/dashboardApi';
-import { useAppSelector } from '../../../redux/app/hook';
+
 import Spinners from '../../spinnners/Spinners';
+import UserStorage from '../../../shared/utils/userStorage';
 
 const Overview = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data: overviewResponseData, isLoading } =
     useGetDashboardOverviewQuery({
-      community_id: user?.community.id as string,
-      community_user_id: user?.id as string,
+      community_id,
+      community_user_id,
     });
 
   // Loading state - show spinner in a centered container

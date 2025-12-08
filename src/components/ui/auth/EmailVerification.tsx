@@ -9,7 +9,7 @@ import { setUser } from '../../../redux/features/auth/authSlice';
 import UserStorage from '../../../shared/utils/userStorage';
 import { Button } from '../button/Button';
 
-type LoginStep = 'credentials' | 'otp-verification' | 'success';
+type LoginStep = 'credentials' | 'otp-verification';
 
 interface UserCredential {
   email: string;
@@ -113,9 +113,14 @@ const EmailVerification: React.FC<Props> = ({ userCredential }) => {
             token: response.token,
           })
         );
-        UserStorage.setCommunityAdminId(response.data.id);
-        navigate(from, { replace: true });
+        // UserStorage.setCommunityAdminId(response.data.id);
+        UserStorage.setUser({
+          id: response.data.id,
+          communityId: { id: response.data.community.id },
+          roleId: { id: response.data.role.id },
+        });
       }
+      navigate(from, { replace: true });
     } catch (error) {
       console.error('Login error:', error);
       toast.error('Login failed. Please check your network and try again.');

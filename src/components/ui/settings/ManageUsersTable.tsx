@@ -3,11 +3,11 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import Table from '../../table/Table';
 import Pagination from '../../pagination/Pagination';
 import FormCheckbox from '../forms/FormCheckBox';
-// import ActionsDropdown from './ActionDropdown';
 import { useGetAdminUsersQuery } from '../../../redux/features/settings/settingsApi';
-import { useAppSelector } from '../../../redux/app/hook';
+
 import type { EstateAdminUser } from '../../../redux/features/settings/settingsTypes';
 import Spinners from '../../spinnners/Spinners';
+import UserStorage from '../../../shared/utils/userStorage';
 
 type TableColumn<T> = {
   key: keyof T;
@@ -20,17 +20,16 @@ type FormValues = {
 };
 
 const ManageUsersTable = () => {
-  // const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const community = useAppSelector((state) => state.auth.user);
+  const community_user_id = UserStorage.getUserId() ?? '';
+  const community_id = UserStorage.getCommunityId() ?? '';
 
   const { data, isLoading } = useGetAdminUsersQuery({
-    community_user_id: community?.id as string,
-    community_id: community?.community.id as string,
+    community_user_id,
+    community_id,
   });
 
-  console.log('user data', data);
   const manageUsersData = useMemo(
     () => (data?.data?.data as EstateAdminUser[]) || [],
     [data?.data?.data]
@@ -131,21 +130,6 @@ const ManageUsersTable = () => {
         </span>
       ),
     },
-    // {
-    //   key: 'id',
-    //   label: 'Action',
-    //   render: (_, row) => (
-    //     <ActionsDropdown
-    //       residentId={row.id}
-    //       residentName={row.name}
-    //       isOpen={openDropdownId === row.id}
-    //       onToggle={() =>
-    //         setOpenDropdownId(openDropdownId === row.id ? null : row.id)
-    //       }
-    //       onClose={() => setOpenDropdownId(null)}
-    //     />
-    //   ),
-    // },
   ];
 
   // Loading state - show spinner in a centered container
