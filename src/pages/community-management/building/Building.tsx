@@ -50,7 +50,7 @@ const Building = () => {
               className="rounded-lg py-2"
               onClick={() => setIsModalOpen(!isModalOpen)}
             >
-              Add New Building
+              Add Building Number
             </Button>
           </SearchComponent>
         </div>

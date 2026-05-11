@@ -6,7 +6,7 @@ import { PendingResident } from '../../components/ui/dashbaord/PendingResident';
 const Dashboard = () => {
   return (
     <section className="h-screen">
-      <div className="p-5">
+      <div className="px-5 pb-5">
         <Overview />
         <div className="flex flex-col md:flex-row justify-between gap-5 space-y-5 my-5">
           <DailyVisitors />

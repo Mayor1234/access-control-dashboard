@@ -5,7 +5,7 @@ import { simpleBaseQuery } from './allBaseQueries';
 
 export const refreshAccessToken = async (
   dispatch: AppDispatch,
-  community_admin_id: string
+  community_admin_id: string,
 ): Promise<{
   data: LoginResponse | null;
 }> => {
@@ -24,10 +24,9 @@ export const refreshAccessToken = async (
         endpoint: '',
         type: 'query',
       },
-      {}
+      {},
     );
 
-    console.log('[refreshAccessToken] Response data:', result);
     const data = result.data as LoginResponse;
 
     if (data.token) {
@@ -35,7 +34,7 @@ export const refreshAccessToken = async (
         setUser({
           data: data.data,
           token: data.token,
-        })
+        }),
       );
       return { data };
     } else {

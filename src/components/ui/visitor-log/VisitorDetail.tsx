@@ -12,11 +12,13 @@ const VisitorInformation = () => {
   const community_admin_id = UserStorage.getUserId() ?? '';
   const community_id = UserStorage.getCommunityId() ?? '';
 
-  const { data, isLoading, isError, error } = useGetEstateInvitesQuery({
-    community_id,
-    community_admin_id,
-    invite_id: id,
-  });
+  const { data, isLoading, isError, error, refetch } = useGetEstateInvitesQuery(
+    {
+      community_id,
+      community_admin_id,
+      invite_id: id,
+    }
+  );
 
   const invitesData = (data?.data.data[0] as Invite) || null;
 
@@ -63,19 +65,18 @@ const VisitorInformation = () => {
   return (
     <div>
       {/* <Header>
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            leftIcon={<BiArrowBack size={16} />}
-            className="rounded-lg py-2"
-            onClick={() => window.history.back()}
-            disabled={isLoading}
-          />
-          <h2 className="text-xl font-semibold text-pry">Visitor Details</h2>
-        </div>
-      </Header> */}
-
+      //   <div className="flex items-center gap-4">
+      //     <Button
+      //       variant="ghost"
+      //       size="sm"
+      //       leftIcon={<BiArrowBack size={16} />}
+      //       className="rounded-lg py-2"
+      //       onClick={() => window.history.back()}
+      //       disabled={isLoading}
+      //     />
+      //     <h2 className="text-xl font-semibold text-pry">Visitor Details</h2>
+      //   </div>
+      // </Header> */}
       <div className="w-full max-w-full mx-auto space-y-6 p-6">
         {/* Loading State */}
         {isLoading && (
@@ -114,7 +115,7 @@ const VisitorInformation = () => {
               <Button
                 variant="primary"
                 size="md"
-                onClick={() => window.location.reload()}
+                onClick={() => refetch()}
                 className="rounded-lg"
               >
                 Try Again

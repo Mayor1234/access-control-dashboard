@@ -9,14 +9,30 @@ import type {
   GetStreetApiResponse,
 } from './communityTypes';
 
+type DeleteApiResponse = { message: string; status: 'success' | 'error' };
+
 export const communityApi = createApi({
   reducerPath: 'communityApi',
   baseQuery: baseQueryWithRefreshAuth,
   tagTypes: ['InvitesResidents'],
   endpoints: (builder) => ({
     // Get all Estate Street with pagination and filters
-    getStreets: builder.query<GetStreetApiResponse, void>({
-      query: () => `/street/fetch`,
+    getStreets: builder.query<
+      GetStreetApiResponse,
+      { community_id: string; street_id?: string }
+    >({
+      query: ({ community_id, street_id }) => {
+        const params = new URLSearchParams({
+          community_id,
+        });
+
+        if (street_id) {
+          params.append('street_id', street_id);
+        }
+
+        return `/street/fetch?${params.toString()}`;
+      },
+
       providesTags: (result) =>
         result?.data.data
           ? [
@@ -51,10 +67,24 @@ export const communityApi = createApi({
     // Get all Estate Buildings with pagination and filters
     getBuildings: builder.query<
       GetBuildingApiResponse,
-      { community_id: string }
+      { community_id: string; street_id?: string; building_id?: string }
     >({
-      query: ({ community_id }) =>
-        `/building/fetch_estate_building?community_id=${community_id}`,
+      query: ({ community_id, street_id, building_id }) => {
+        const params = new URLSearchParams({
+          community_id,
+        });
+
+        if (street_id) {
+          params.append('street_id', street_id);
+        }
+
+        if (building_id) {
+          params.append('building_id', building_id);
+        }
+
+        return `/building/fetch_estate_building?${params.toString()}`;
+      },
+
       providesTags: (result) =>
         result?.data.data
           ? [
@@ -66,6 +96,23 @@ export const communityApi = createApi({
             ]
           : [{ type: 'InvitesResidents', id: 'LIST' }],
     }),
+    // getBuildings: builder.query<
+    //   GetBuildingApiResponse,
+    //   { community_id: string }
+    // >({
+    //   query: ({ community_id }) =>
+    //     `/building/fetch_estate_building?community_id=${community_id}`,
+    //   providesTags: (result) =>
+    //     result?.data.data
+    //       ? [
+    //           ...result.data.data.map(({ id }: { id: string }) => ({
+    //             type: 'InvitesResidents' as const,
+    //             id,
+    //           })),
+    //           { type: 'InvitesResidents', id: 'LIST' },
+    //         ]
+    //       : [{ type: 'InvitesResidents', id: 'LIST' }],
+    // }),
 
     // Add street
     addBuilding: builder.mutation<
@@ -74,6 +121,7 @@ export const communityApi = createApi({
         community_id: string;
         community_user_id: string;
         street_id: string;
+        building_number: string;
         description: string;
       }
     >({
@@ -101,7 +149,40 @@ export const communityApi = createApi({
           : [{ type: 'InvitesResidents', id: 'LIST' }],
     }),
 
-    // Add street
+    // Update building
+    updateBuilding: builder.mutation<
+      CreateBuildingApiResponse,
+      {
+        building_id: string;
+        community_id: string;
+        community_user_id: string;
+        street_id: string;
+        building_number: string;
+        description: string;
+      }
+    >({
+      query: (body) => ({
+        url: `/building/update_estate_building`,
+        method: 'PUT',
+        body: { ...body },
+      }),
+      invalidatesTags: [{ type: 'InvitesResidents', id: 'LIST' }],
+    }),
+
+    // Delete building
+    deleteBuilding: builder.mutation<
+      DeleteApiResponse,
+      { building_id: string; community_id: string; community_user_id: string }
+    >({
+      query: (body) => ({
+        url: `/building/delete_estate_building`,
+        method: 'DELETE',
+        body: { ...body },
+      }),
+      invalidatesTags: [{ type: 'InvitesResidents', id: 'LIST' }],
+    }),
+
+    // Add flat
     AddFlat: builder.mutation<
       CreateFlatApiResponse,
       {
@@ -126,6 +207,8 @@ export const {
   useAddStreetMutation,
   useGetBuildingsQuery,
   useAddBuildingMutation,
+  useUpdateBuildingMutation,
+  useDeleteBuildingMutation,
   useGetFlatsQuery,
   useAddFlatMutation,
 } = communityApi;

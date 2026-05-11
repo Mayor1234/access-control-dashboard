@@ -3,11 +3,11 @@ import TabButton from '../../components/ui/visitor-log/TabButton';
 import EstateStreet from './street/EstateStreet';
 import Building from './building/Building';
 
-import Flat from './flat/Flat';
+// import Flat from './flat/Flat';
 import Resident from './resident/Resident';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
-type Visitor = 'resident-directory' | 'estate-street' | 'building' | 'flat';
+type Visitor = 'resident-directory' | 'estate-street' | 'building';
 
 const CommunityManagement = () => {
   const [activeTab, setActiveTab] = useState<Visitor>('resident-directory');
@@ -26,14 +26,14 @@ const CommunityManagement = () => {
     },
     {
       id: 'building',
-      label: 'Building',
+      label: 'Building Number',
       shortLabel: 'Building',
     },
-    {
-      id: 'flat',
-      label: 'Flat',
-      shortLabel: 'Flat',
-    },
+    // {
+    //   id: 'flat',
+    //   label: 'Flat',
+    //   shortLabel: 'Flat',
+    // },
   ];
 
   return (
@@ -97,7 +97,7 @@ const CommunityManagement = () => {
         {activeTab === 'resident-directory' && <Resident />}
         {activeTab === 'estate-street' && <EstateStreet />}
         {activeTab === 'building' && <Building />}
-        {activeTab === 'flat' && <Flat />}
+        {/* {activeTab === 'flat' && <Flat />} */}
       </div>
     </section>
   );

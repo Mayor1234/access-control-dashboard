@@ -103,20 +103,25 @@ const EmailVerification: React.FC<Props> = ({ userCredential }) => {
         otp: otpValue,
       }).unwrap();
 
+      console.log('OTP Validation Response:', response);
       if (response.status === 'success') {
         toast.success(
-          response.message || 'Login successful! Please verify OTP to continue.'
+          response.message ||
+            'Login successful! Please verify OTP to continue.',
         );
         dispatch(
           setUser({
             data: response.data,
             token: response.token,
-          })
+          }),
         );
         // UserStorage.setCommunityAdminId(response.data.id);
         UserStorage.setUser({
           id: response.data.id,
-          communityId: { id: response.data.community.id },
+          communityId: {
+            id: response.data.community.id,
+            name: response.data.community.name,
+          },
           roleId: { id: response.data.role.id },
         });
       }

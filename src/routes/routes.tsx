@@ -13,6 +13,7 @@ import VisitorLog from '../pages/visitor-log/VisitorLog';
 import VisitorDetail from '../components/ui/visitor-log/VisitorDetail';
 import ApprovalOversightDetail from '../components/ui/approval-oversight/ApprovalOversightDetail';
 import CommunityManagementDetail from '../components/ui/community-management/CommunityManagementDetail';
+import StreetDetail from '../components/ui/community-management/street/StreetDetail';
 import { Settings } from '../pages/settings/Settings';
 import ManageUsers from '../pages/settings/manage-users/ManageUsers';
 import UserRoles from '../pages/settings/manage-users/UserRoles';
@@ -52,6 +53,10 @@ export const router = createBrowserRouter(
             <Route
               path="community-management/:id"
               element={<CommunityManagementDetail />}
+            />
+            <Route
+              path="community-management/street/:streetId"
+              element={<StreetDetail />}
             />
 
             {/* Profile */}

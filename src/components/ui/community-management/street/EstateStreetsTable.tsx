@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import Table from '../../../table/Table';
 import Pagination from '../../../pagination/Pagination';
@@ -6,6 +7,7 @@ import FormCheckbox from '../../forms/FormCheckBox';
 import { useGetStreetsQuery } from '../../../../redux/features/community-management/communityApi';
 import type { GetStreet } from '../../../../redux/features/community-management/communityTypes';
 import Spinners from '../../../spinnners/Spinners';
+import UserStorage from '../../../../shared/utils/userStorage';
 
 type TableColumn<T> = {
   key: keyof T;
@@ -19,12 +21,17 @@ type FormValues = {
 
 const EstateStreetsTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
 
-  const { data: streetRespondData, isLoading } = useGetStreetsQuery();
+  const community_id = UserStorage.getCommunityId();
+  const { data: streetRespondData, isLoading } = useGetStreetsQuery(
+    { community_id: community_id || '' },
+    { skip: !community_id },
+  );
 
   const streetData = useMemo(
     () => (streetRespondData?.data?.data as GetStreet[]) || [],
-    [streetRespondData?.data?.data]
+    [streetRespondData?.data?.data],
   );
 
   const methods = useForm<FormValues>({
@@ -34,7 +41,7 @@ const EstateStreetsTable = () => {
           ...acc,
           [item.id]: false,
         }),
-        {}
+        {},
       ),
     },
   });
@@ -46,7 +53,7 @@ const EstateStreetsTable = () => {
   const handleSelectAll = (checked: boolean) => {
     const newSelection = streetData.reduce(
       (acc, item) => ({ ...acc, [item.id]: checked }),
-      {}
+      {},
     );
     setValue('selectedPositions', newSelection);
   };
@@ -76,15 +83,17 @@ const EstateStreetsTable = () => {
             onChange={(e) => handleSelectAll(e.target.checked)}
             className="hidden md:block appearance-none h-4 w-4 text-pry border border-border bg-gray-100 rounded-sm focus:ring-active focus:ring-2 focus:outline-none checked:focus:ring-border focus:ring-offset-2 focus:ring-offset-gray-100 checked:bg-pry checked:border-transparent checked:focus:ring-offset-gray-100"
           />
-          <span>Street Names</span>
+          <span>Street Name</span>
         </div>
       ),
       render: (_, row) => (
         <div className="flex items-center gap-3">
-          <FormCheckbox<FormValues>
-            name={`selectedPositions.${row.id}`}
-            control={methods.control}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <FormCheckbox<FormValues>
+              name={`selectedPositions.${row.id}`}
+              control={methods.control}
+            />
+          </div>
           <span className="text-dark-text font-medium font-libre capitalize">
             {row.name}
           </span>
@@ -93,10 +102,19 @@ const EstateStreetsTable = () => {
     },
     {
       key: 'id',
-      label: 'Street Numbers',
+      label: 'Start Number',
       render: (_, value) => (
-        <span className="text-[#667085] text-sm font-medium font-libre ">
-          {value.starting_number} - {value.ending_number}
+        <span className="text-text-light text-sm font-medium font-libre ">
+          {value.starting_number ? value.starting_number : 'N/A'}
+        </span>
+      ),
+    },
+    {
+      key: 'id',
+      label: 'End Number',
+      render: (_, value) => (
+        <span className="text-text-light text-sm font-medium font-libre ">
+          {value.ending_number ? value.ending_number : 'N/A'}
         </span>
       ),
     },
@@ -106,7 +124,7 @@ const EstateStreetsTable = () => {
   if (isLoading) {
     return (
       <section>
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <Spinners variant="default" size="xl" color="primary" />
         </div>
       </section>
@@ -118,7 +136,7 @@ const EstateStreetsTable = () => {
     return (
       <section>
         <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
+          <div className="flex flex-col items-center justify-center min-h-75 text-center p-8">
             <h3 className="text-lg text-pry-light mb-2">No Street found</h3>
           </div>
         </div>
@@ -131,7 +149,13 @@ const EstateStreetsTable = () => {
       <FormProvider {...methods}>
         <div className="sm:border border-border rounded-xl">
           <div className="mb-5">
-            <Table data={streetData} columns={columns} />
+            <Table
+              data={streetData}
+              columns={columns}
+              onRowClick={(row) =>
+                navigate(`/community-management/street/${row.id}`)
+              }
+            />
           </div>
           <Pagination
             totalPages={streetRespondData?.data.meta.totalPages as number}

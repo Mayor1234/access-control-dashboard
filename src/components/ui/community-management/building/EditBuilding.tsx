@@ -5,31 +5,25 @@ import { MdOutlineClose } from 'react-icons/md';
 import FormInput from '../../forms/FormInput';
 import { Button } from '../../button/Button';
 import {
-  useAddBuildingMutation,
   useGetStreetsQuery,
+  useUpdateBuildingMutation,
 } from '../../../../redux/features/community-management/communityApi';
 import { toast } from 'react-toastify';
 import Spinners from '../../../spinnners/Spinners';
-import type { GetStreet } from '../../../../redux/features/community-management/communityTypes';
+import type { GetBuilding, GetStreet } from '../../../../redux/features/community-management/communityTypes';
 import SelectStreetButton from './SelectStreetButton';
 import UserStorage from '../../../../shared/utils/userStorage';
 
 type Props = {
-  setIsModalOpen: () => void;
+  building: GetBuilding;
+  onClose: () => void;
 };
 
-// Building Zod Schema
 const buildingSchema = z.object({
   street: z
-    .object({
-      id: z.string(),
-      name: z.string(),
-      status: z.string(),
-    })
+    .object({ id: z.string(), name: z.string(), status: z.string() })
     .nullable()
-    .refine((val) => val !== null, {
-      message: 'Street is required',
-    }),
+    .refine((val) => val !== null, { message: 'Street is required' }),
   buildingNumber: z.string().min(1, 'Building number is required').trim(),
   description: z
     .string()
@@ -37,7 +31,7 @@ const buildingSchema = z.object({
     .max(200, 'Description must not exceed 200 characters'),
 });
 
-const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
+const EditBuilding: React.FC<Props> = ({ building, onClose }) => {
   const community_user_id = UserStorage.getUserId() ?? '';
   const community_id = UserStorage.getCommunityId() ?? '';
 
@@ -46,39 +40,28 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
     { skip: !community_id },
   );
 
-  console.log('Streets Response Data:', streetsResponseData); // Debug log for streets data
-
-  const [addBuilding, { isLoading }] = useAddBuildingMutation();
+  const [updateBuilding, { isLoading }] = useUpdateBuildingMutation();
 
   const methods = useForm({
     resolver: zodResolver(buildingSchema),
     defaultValues: {
-      street: null,
-      buildingNumber: '',
-      description: '',
+      street: building.street
+        ? { id: building.street.id, name: building.street.name, status: building.street.status }
+        : null,
+      buildingNumber: building.building_number ?? '',
+      description: building.description ?? '',
     },
   });
 
   const selectedStreet = methods.watch('street');
   const description = methods.watch('description');
-
-  // Check if form is valid
-  const isFormValid =
-    selectedStreet && description && community_id && community_user_id;
+  const isFormValid = selectedStreet && description && community_id && community_user_id;
 
   const handleSubmit = methods.handleSubmit(async (data) => {
-    if (!community_id || !community_user_id) {
-      toast.error('Session expired. Please log in again.');
-      return;
-    }
-
-    if (!data.street) {
-      toast.error('Please select a street.');
-      return;
-    }
-
+    if (!data.street) return;
     try {
-      const response = await addBuilding({
+      const response = await updateBuilding({
+        building_id: building.id,
         community_id,
         community_user_id,
         street_id: data.street.id,
@@ -88,11 +71,10 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
 
       if (response.status === 'success') {
         toast.success(response.message);
-        methods.reset();
-        setIsModalOpen();
+        onClose();
       }
-    } catch (error) {
-      console.error('Failed to add building:', error);
+    } catch {
+      toast.error('Failed to update building. Please try again.');
     }
   });
 
@@ -100,22 +82,18 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
     <section>
       <div className="flex items-center justify-between mb-8 w-full">
         <h2 className="font-opensans text-xl text-pry font-medium capitalize">
-          Add Building
+          Edit Building
         </h2>
-        <button
-          type="button"
-          onClick={setIsModalOpen}
-          className="cursor-pointer"
-        >
+        <button type="button" onClick={onClose} className="cursor-pointer">
           <MdOutlineClose className="text-pry" size={20} />
         </button>
       </div>
       <FormProvider {...methods}>
         <form
           onSubmit={(e) => {
-            e.stopPropagation(); // prevent bubbling to parent form
-            e.preventDefault(); // prevent native form submit
-            handleSubmit(); // run RHF submission
+            e.stopPropagation();
+            e.preventDefault();
+            handleSubmit();
           }}
         >
           <div className="space-y-6 w-full">
@@ -128,37 +106,24 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
               />
             </div>
             <div className="w-full">
-              <label
-                htmlFor="description"
-                className="block mb-3 text-sm font-medium text-gray-600"
-              >
+              <label className="block mb-3 text-sm font-medium text-gray-600">
                 Building number
               </label>
-              <div>
-                <FormInput
-                  name="buildingNumber"
-                  placeholder="Building number"
-                />
-              </div>
+              <FormInput name="buildingNumber" placeholder="Building number" />
             </div>
             <div className="w-full">
-              <label
-                htmlFor="description"
-                className="block mb-3 text-sm font-medium text-gray-600"
-              >
+              <label className="block mb-3 text-sm font-medium text-gray-600">
                 Description
               </label>
-              <div>
-                <FormInput name="description" placeholder="Description" />
-              </div>
+              <FormInput name="description" placeholder="Description" />
             </div>
-
             <div className="flex justify-end gap-5">
               <Button
                 variant="outline"
                 size="md"
                 className="rounded-lg px-5 py-2 w-fit"
-                onClick={setIsModalOpen}
+                onClick={onClose}
+                type="button"
               >
                 Cancel
               </Button>
@@ -170,14 +135,9 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
                 disabled={!isFormValid || isLoading}
               >
                 {isLoading ? (
-                  <Spinners
-                    variant="dots"
-                    size="sm"
-                    color="white"
-                    label="Wait..."
-                  />
+                  <Spinners variant="dots" size="sm" color="white" label="Saving..." />
                 ) : (
-                  'Add Building'
+                  'Save Changes'
                 )}
               </Button>
             </div>
@@ -188,4 +148,4 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
   );
 };
 
-export default AddBuilding;
+export default EditBuilding;

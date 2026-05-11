@@ -1,39 +1,9 @@
-// class UserStorage {
-//   private static readonly USER_ID_KEY = 'community_admin_id';
-//   private static readonly USER_ID_KEY = 'community_id';
-
-//   static getCommunityAdminId(): string | null {
-//     return localStorage.getItem(UserStorage.USER_ID_KEY);
-//   }
-
-//   static setCommunityAdminId(communityAdminId: string): void {
-//     localStorage.setItem(UserStorage.USER_ID_KEY, communityAdminId);
-//   }
-
-//   static removeCommunityAdminId(): void {
-//     localStorage.removeItem(UserStorage.USER_ID_KEY);
-//   }
-
-//   static getCommunityId(): string | null {
-//     return localStorage.getItem(UserStorage.USER_ID_KEY);
-//   }
-
-//   static setCommunityId(communityId: string): void {
-//     localStorage.setItem(UserStorage.USER_ID_KEY, communityId);
-//   }
-
-//   static removeCommunityd(): void {
-//     localStorage.removeItem(UserStorage.USER_ID_KEY);
-//   }
-// }
-
-// export default UserStorage;
-
 // userStorage.ts
 interface User {
   id: string;
   communityId: {
     id: string;
+    name: string;
   };
   roleId: {
     id: string;

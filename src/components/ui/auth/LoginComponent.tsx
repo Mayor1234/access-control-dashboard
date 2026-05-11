@@ -28,7 +28,8 @@ const LoginComponent: React.FC<Props> = ({ setActiveScreen }) => {
       if (response.status === 'success') {
         setActiveScreen('otp-verification');
         toast.success(
-          response.message || 'Login successful! Please verify OTP to continue.'
+          response.message ||
+            'Login successful! Please verify OTP to continue.',
         );
       }
     } catch (error) {

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import SideBar from '../components/side-bar/SideBar';
 import Header from '../components/ui/header/Header';
+import CommunityTap from '../components/ui/tap-header/CommunityTap';
 import { sideBarBottomMenu, sideBarTopMenu } from '../constants';
 
 export default function DashboardLayout() {
@@ -83,6 +84,9 @@ export default function DashboardLayout() {
           transition={{ duration: 0.3 }}
           className="overflow-y-auto flex-1"
         >
+          <div className="px-5 pt-5">
+            <CommunityTap />
+          </div>
           <Outlet />
         </motion.main>
       </div>

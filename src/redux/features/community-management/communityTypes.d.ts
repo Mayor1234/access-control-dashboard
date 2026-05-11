@@ -54,6 +54,7 @@ export interface CreateStreetApiResponse {
 export interface GetBuilding {
   id: string;
   description: string;
+  building_number: string;
   status: Status;
   created_at: Date;
   street: {
@@ -75,7 +76,7 @@ export interface CreateBuilding {
 
 export interface GetBuildingApiResponse {
   data: {
-    data: Building[];
+    data: GetBuilding[];
     meta: {
       page: number;
       size: number;
@@ -88,7 +89,7 @@ export interface GetBuildingApiResponse {
 }
 
 export interface CreateBuildingApiResponse {
-  data: Building;
+  data: GetBuilding;
   message: string;
   status: 'success' | 'error';
 }
@@ -119,7 +120,7 @@ export interface CreateFlat {
 
 export interface GetFlatApiResponse {
   data: {
-    data: Building[];
+    data: GetFlat[];
     meta: {
       page: number;
       size: number;
@@ -132,7 +133,7 @@ export interface GetFlatApiResponse {
 }
 
 export interface CreateFlatApiResponse {
-  data: Building;
+  data: GetFlat;
   message: string;
   status: 'success' | 'error';
 }

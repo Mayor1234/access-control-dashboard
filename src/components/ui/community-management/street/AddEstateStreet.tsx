@@ -97,7 +97,7 @@ const AddEstateStreet: React.FC<Props> = ({ setIsModalOpen }) => {
                 htmlFor="streetNumber"
                 className="block mb-3 text-sm font-medium text-gray-600"
               >
-                Street Number (Start)
+                Start Number
               </label>
               <div>
                 <FormInput
@@ -111,7 +111,7 @@ const AddEstateStreet: React.FC<Props> = ({ setIsModalOpen }) => {
                 htmlFor="streetNumber"
                 className="block mb-3 text-sm font-medium text-gray-600"
               >
-                Street Number (End)
+                End Number
               </label>
               <div>
                 <FormInput name="streetEnd" placeholder="End Street Number" />
