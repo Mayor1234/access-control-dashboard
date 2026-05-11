@@ -26,17 +26,12 @@ const FlatSchema = z.object({
       name: z.string(),
       status: z.string(),
     })
-    .nullable()
-    .refine((val) => val !== null, {
-      message: 'Building is required',
-    }),
+    .nullable(),
   description: z
     .string()
     .min(3, 'Description must be at least 3 characters')
     .max(200, 'Description must not exceed 200 characters'),
 });
-
-type FlatFormData = z.infer<typeof FlatSchema>;
 
 const AddFlat: React.FC<Props> = ({ setIsModalOpen }) => {
   const community_user_id = UserStorage.getUserId() ?? '';
@@ -48,9 +43,8 @@ const AddFlat: React.FC<Props> = ({ setIsModalOpen }) => {
 
   const [addFlat, { isLoading }] = useAddFlatMutation();
 
-  const methods = useForm<FlatFormData>({
+  const methods = useForm({
     resolver: zodResolver(FlatSchema),
-
     defaultValues: {
       building: null,
       description: '',

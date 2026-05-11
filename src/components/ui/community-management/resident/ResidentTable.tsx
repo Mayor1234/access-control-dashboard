@@ -31,7 +31,7 @@ const ResidentTable = () => {
 
   const residentData = useMemo(
     () => (residentDataResponse?.data?.data as EstateResident[]) || [],
-    [residentDataResponse?.data?.data]
+    [residentDataResponse?.data?.data],
   );
 
   const methods = useForm<FormValues>({
@@ -41,7 +41,7 @@ const ResidentTable = () => {
           ...acc,
           [item.id]: false,
         }),
-        {}
+        {},
       ),
     },
   });
@@ -69,11 +69,11 @@ const ResidentTable = () => {
     (checked: boolean) => {
       const newSelection = residentData.reduce(
         (acc, item) => ({ ...acc, [item.id]: checked }),
-        {}
+        {},
       );
       setValue('selectedPositions', newSelection);
     },
-    [residentData, setValue]
+    [residentData, setValue],
   );
 
   const columns: TableColumn<EstateResident>[] = useMemo(
@@ -164,7 +164,7 @@ const ResidentTable = () => {
       handleSelectAll,
       openDropdownId,
       methods.control,
-    ]
+    ],
   );
 
   // Loading state - show spinner in a centered container
@@ -183,21 +183,8 @@ const ResidentTable = () => {
     return (
       <section>
         <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
-            <svg
-              className="w-16 h-16 text-pry-light mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            <h3 className="text-lg  text-pry-light mb-2">No Resident found</h3>
+          <div className="flex items-center justify-center min-h-75 text-center p-8">
+            <h3 className="text-lg text-pry-light mb-2">No Resident found</h3>
           </div>
         </div>
       </section>
