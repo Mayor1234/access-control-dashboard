@@ -206,10 +206,10 @@ const ApprovalOversightTable = () => {
           <Table data={residentsOversight} columns={columns} />
         </div>
         <Pagination
-          totalPages={data.data?.meta.totalPages}
+          totalPages={data?.data?.meta.totalPages ?? 1}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
-          maxLength={data.data?.meta.size}
+          maxLength={data?.data?.meta.size ?? 10}
         />
       </div>
     </FormProvider>

@@ -53,13 +53,10 @@ const ResidentTable = () => {
   const { allSelected, indeterminate } = useMemo(() => {
     const all =
       residentData.length > 0 &&
-      selectedPositions &&
-      residentData.every((item) => selectedPositions[item.id]);
+      residentData.every((item) => Boolean(selectedPositions?.[item.id]));
 
     const some =
-      !all &&
-      selectedPositions &&
-      residentData.some((item) => selectedPositions[item.id]);
+      !all && residentData.some((item) => Boolean(selectedPositions?.[item.id]));
 
     return { allSelected: all, indeterminate: some };
   }, [residentData, selectedPositions]);
@@ -110,10 +107,10 @@ const ResidentTable = () => {
       },
       {
         key: 'id',
-        label: 'Identification No',
-        render: (value) => (
-          <span className="text-dark text-sm font-medium font-libre ">
-            {value as string}
+        label: 'Email',
+        render: (_, row) => (
+          <span className="text-dark text-sm font-medium font-libre">
+            {row.user.email || 'N/A'}
           </span>
         ),
       },
@@ -171,7 +168,7 @@ const ResidentTable = () => {
   if (isLoading) {
     return (
       <section>
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <Spinners variant="default" size="xl" color="primary" />
         </div>
       </section>

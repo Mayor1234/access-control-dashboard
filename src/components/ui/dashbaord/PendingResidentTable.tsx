@@ -34,7 +34,7 @@ const PendingResidentTable = () => {
 
   const pendingResidents = useMemo(
     () => (data?.data?.data as EstateResident[]) || [],
-    [data?.data?.data]
+    [data?.data?.data],
   );
 
   const methods = useForm<FormValues>({
@@ -44,7 +44,7 @@ const PendingResidentTable = () => {
           ...acc,
           [item.id]: false,
         }),
-        {}
+        {},
       ),
     },
   });
@@ -56,7 +56,7 @@ const PendingResidentTable = () => {
   const handleSelectAll = (checked: boolean) => {
     const newSelection = pendingResidents.reduce(
       (acc, item) => ({ ...acc, [item.id]: checked }),
-      {}
+      {},
     );
     setValue('selectedPositions', newSelection);
   };
@@ -64,11 +64,12 @@ const PendingResidentTable = () => {
   // Check if all visible rows are selected
   const allSelected =
     pendingResidents.length > 0 &&
-    pendingResidents.every((item) => selectedPositions[item.id]);
+    pendingResidents.every((item) => Boolean(selectedPositions?.[item.id]));
 
   // Check if some (but not all) rows are selected
   const indeterminate =
-    !allSelected && pendingResidents.some((item) => selectedPositions[item.id]);
+    !allSelected &&
+    pendingResidents.some((item) => Boolean(selectedPositions?.[item.id]));
 
   const columns: TableColumn<EstateResident>[] = [
     {
@@ -89,37 +90,35 @@ const PendingResidentTable = () => {
           <span>Name</span>
         </div>
       ),
-      render: (value, row) => (
+      render: (_, row) => (
         <div className="flex items-center gap-3">
           <FormCheckbox<FormValues>
             name={`selectedPositions.${row.id}`}
             control={methods.control}
           />
           <span className="text-dark-text font-medium font-libre">
-            {value as string}
+            {row.user.first_name} {row.user.last_name}
           </span>
         </div>
       ),
     },
     {
       key: 'id',
-      label: 'Identification No',
-      render: (value) => (
-        <span className="text-dark text-sm font-medium font-libre ">
-          {value as string}
+      label: 'Email',
+      render: (_, row) => (
+        <span className="text-dark text-sm font-medium font-libre">
+          {row.user.email || 'N/A'}
         </span>
       ),
     },
     {
       key: 'id',
       label: 'Phone Number',
-      render: (value) => (
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-dark font-medium font-libre text-sm">
-              {value as string}
-            </span>
-          </div>
+      render: (_, row) => (
+        <div className="flex items-center gap-2">
+          <span className="text-dark font-medium font-libre text-sm">
+            {row.user.mobile_number || 'N/A'}
+          </span>
         </div>
       ),
     },
@@ -128,10 +127,7 @@ const PendingResidentTable = () => {
       key: 'id',
       label: 'Resident Status',
       render: (_, value) => (
-        <span
-          className={`
-           ${formatStatusColor(value.status)} text-xs`}
-        >
+        <span className={`${formatStatusColor(value.status)} text-xs`}>
           {value.status}
         </span>
       ),
@@ -157,7 +153,7 @@ const PendingResidentTable = () => {
     return (
       <section>
         <div className="border border-border rounded-xl">
-          <div className="flex items-center justify-center min-h-[400px]">
+          <div className="flex items-center justify-center min-h-100">
             <Spinners variant="default" size="xl" color="primary" />
           </div>
         </div>
@@ -170,7 +166,7 @@ const PendingResidentTable = () => {
     return (
       <section>
         <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
+          <div className="flex flex-col items-center justify-center min-h-75 text-center p-8">
             <svg
               className="w-10 h-10 text-pry-light mb-3"
               fill="none"
@@ -200,7 +196,7 @@ const PendingResidentTable = () => {
           <Table data={pendingResidents} columns={columns} />
         </div>
         <Pagination
-          totalPages={data.data.meta.totalPages as number}
+          totalPages={data?.data.meta.totalPages ?? 1}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           maxLength={10}

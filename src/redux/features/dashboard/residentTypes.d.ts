@@ -21,8 +21,8 @@ export interface PaginationMeta {
   totalCount: number;
 }
 
-export interface ApiResponse {
-  data: EstateResident[];
+export interface ApiResponse<T = unknown> {
+  data: T;
   message: string;
   status: string;
 }
