@@ -33,8 +33,8 @@ const buildingSchema = z.object({
   buildingNumber: z.string().min(1, 'Building number is required').trim(),
   description: z
     .string()
-    .min(3, 'Description must be at least 3 characters')
-    .max(200, 'Description must not exceed 200 characters'),
+    .max(200, 'Description must not exceed 200 characters')
+    .optional(),
 });
 
 const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
@@ -45,8 +45,6 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
     { community_id },
     { skip: !community_id },
   );
-
-  console.log('Streets Response Data:', streetsResponseData); // Debug log for streets data
 
   const [addBuilding, { isLoading }] = useAddBuildingMutation();
 
@@ -60,11 +58,9 @@ const AddBuilding: React.FC<Props> = ({ setIsModalOpen }) => {
   });
 
   const selectedStreet = methods.watch('street');
-  const description = methods.watch('description');
 
   // Check if form is valid
-  const isFormValid =
-    selectedStreet && description && community_id && community_user_id;
+  const isFormValid = selectedStreet && community_id && community_user_id;
 
   const handleSubmit = methods.handleSubmit(async (data) => {
     if (!community_id || !community_user_id) {

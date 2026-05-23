@@ -17,7 +17,7 @@ const EstateVisitors = () => {
 
   // Skeleton Loader for Pie Chart
   const PieChartSkeleton = () => (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center h-full  w-full md:h-72">
       <div className="relative">
         <div className="w-48 h-48 rounded-full border-8 border-gray-200 animate-pulse" />
         <div className="absolute inset-0 flex items-center justify-center">

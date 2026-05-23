@@ -6,7 +6,6 @@ import Pagination from '../../../pagination/Pagination';
 import FormCheckbox from '../../forms/FormCheckBox';
 import { useGetStreetsQuery } from '../../../../redux/features/community-management/communityApi';
 import type { GetStreet } from '../../../../redux/features/community-management/communityTypes';
-import Spinners from '../../../spinnners/Spinners';
 import UserStorage from '../../../../shared/utils/userStorage';
 
 type TableColumn<T> = {
@@ -120,29 +119,7 @@ const EstateStreetsTable = () => {
     },
   ];
 
-  // Loading state - show spinner in a centered container
-  if (isLoading) {
-    return (
-      <section>
-        <div className="flex items-center justify-center min-h-100">
-          <Spinners variant="default" size="xl" color="primary" />
-        </div>
-      </section>
-    );
-  }
 
-  // Empty state - no visitors found
-  if (streetData.length === 0) {
-    return (
-      <section>
-        <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-75 text-center p-8">
-            <h3 className="text-lg text-pry-light mb-2">No Street found</h3>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <div>
@@ -155,14 +132,19 @@ const EstateStreetsTable = () => {
               onRowClick={(row) =>
                 navigate(`/community-management/street/${row.id}`)
               }
+              loading={isLoading}
             />
           </div>
-          <Pagination
-            totalPages={streetRespondData?.data.meta.totalPages as number}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            maxLength={10}
-          />
+          {
+            streetData.length>0 && (
+              <Pagination
+                totalPages={streetRespondData?.data.meta.totalPages ?? 1}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                maxLength={10}
+              />
+            )
+          }
         </div>
       </FormProvider>
     </div>

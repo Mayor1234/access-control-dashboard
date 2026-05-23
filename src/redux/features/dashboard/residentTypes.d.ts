@@ -67,3 +67,52 @@ export interface DashboardOverviewDailyVisitorResponse {
   message: string;
   status: string;
 }
+
+
+export interface FetchApiResponse {
+  data: {
+    data: ResidentAssignment[];
+    meta: {
+      page: string;
+      size: number;
+      totalPages: number;
+      totalCount: number;
+    };
+  };
+  message: string;
+  status: string;
+}
+
+export interface ResidentAssignment {
+  id: string;
+  status: string; // Could be "approved", "pending", "rejected", etc.
+  created_at: string; // ISO 8601 datetime string
+  updated_at: string; // ISO 8601 datetime string
+  resident: Resident;
+  building: Building;
+}
+
+interface Resident {
+  id: string;
+  user: User;
+}
+
+interface User {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  mobile_number: string;
+}
+
+interface Building {
+  id: string;
+  building_number: string;
+  description: string;
+  street: Street;
+}
+
+interface Street {
+  id: string;
+  name: string;
+}

@@ -27,8 +27,8 @@ const buildingSchema = z.object({
   buildingNumber: z.string().min(1, 'Building number is required').trim(),
   description: z
     .string()
-    .min(3, 'Description must be at least 3 characters')
-    .max(200, 'Description must not exceed 200 characters'),
+    .max(200, 'Description must not exceed 200 characters')
+    .optional(),
 });
 
 const EditBuilding: React.FC<Props> = ({ building, onClose }) => {
@@ -54,8 +54,7 @@ const EditBuilding: React.FC<Props> = ({ building, onClose }) => {
   });
 
   const selectedStreet = methods.watch('street');
-  const description = methods.watch('description');
-  const isFormValid = selectedStreet && description && community_id && community_user_id;
+  const isFormValid = selectedStreet && community_id && community_user_id;
 
   const handleSubmit = methods.handleSubmit(async (data) => {
     if (!data.street) return;

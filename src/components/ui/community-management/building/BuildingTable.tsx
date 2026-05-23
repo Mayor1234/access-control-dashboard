@@ -180,41 +180,26 @@ const BuildingTable = () => {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <section>
-        <div className="flex items-center justify-center min-h-100">
-          <Spinners variant="default" size="xl" color="primary" />
-        </div>
-      </section>
-    );
-  }
-
-  if (buildingResponseData.length === 0) {
-    return (
-      <section>
-        <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-75 text-center p-8">
-            <h3 className="text-lg text-pry-light mb-2">No Building found</h3>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section>
       <FormProvider {...methods}>
         <div className="sm:border border-border rounded-xl">
           <div className="mb-5">
-            <Table data={buildingResponseData} columns={columns} />
+            <Table data={buildingResponseData} columns={columns} loading={isLoading} />
           </div>
-          <Pagination
-            totalPages={data?.data.meta.totalPages as number}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            maxLength={10}
-          />
+
+          {
+           buildingResponseData.length > 0 && (
+             <Pagination
+               totalPages={data?.data.meta.totalPages ?? 1}
+               currentPage={currentPage}
+               onPageChange={setCurrentPage}
+               maxLength={10}
+             />
+           )
+        }
+         
         </div>
       </FormProvider>
 

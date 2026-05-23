@@ -6,7 +6,7 @@ import FormCheckbox from '../../../components/ui/forms/FormCheckBox';
 import { formatStatusColor } from '../../../shared/helper/formatStatus';
 import MoreActionsDropdown from './MoreActionDropdown';
 import type { Invite } from '../../../redux/features/visitors-log/visitorsTypes';
-import Spinners from '../../spinnners/Spinners';
+
 
 type TableColumn<T> = {
   key: keyof T;
@@ -170,7 +170,6 @@ const VisitorTable: React.FC<Props> = ({
         render: (_, row) => (
           <MoreActionsDropdown
             residentId={row.id}
-            residentName={row.name}
             isOpen={openDropdownId === row.id}
             onToggle={() => handleDropdownToggle(row.id)}
             onClose={handleDropdownClose}
@@ -189,56 +188,22 @@ const VisitorTable: React.FC<Props> = ({
     ]
   );
 
-  // Loading state - show spinner in a centered container
-  if (isLoading) {
-    return (
-      <section>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Spinners variant="default" size="xl" color="primary" />
-        </div>
-      </section>
-    );
-  }
-
-  // Empty state - no visitors found
-  if (visitors.length === 0) {
-    return (
-      <section>
-        <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
-            <svg
-              className="w-16 h-16 text-pry-light mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            <h3 className="text-lg text-pry-light mb-2">No visitors found</h3>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Main content - show table with data
   return (
     <FormProvider {...methods}>
       <div className="sm:border border-border rounded-xl">
         <div className="mb-5">
           <Table data={visitors} columns={columns} loading={isLoading} />
         </div>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          maxLength={10}
-        />
+        {
+          visitors.length > 0 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+              maxLength={10}
+            />
+          )
+        }
       </div>
     </FormProvider>
   );

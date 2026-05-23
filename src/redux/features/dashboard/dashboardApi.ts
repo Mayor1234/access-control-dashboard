@@ -6,7 +6,8 @@ import type {
   DashboardOverviewResponse,
   DashboardOverviewVisitorPieResponse,
   EstateResident,
-  EstateResidentsApiResponse,
+  FetchApiResponse,
+  // EstateResidentsApiResponse,
 } from './residentTypes';
 
 export const dashboardApi = createApi({
@@ -16,7 +17,7 @@ export const dashboardApi = createApi({
   endpoints: (builder) => ({
     // Get all estate residents with pagination and filters
     getEstateResidents: builder.query<
-      EstateResidentsApiResponse,
+    FetchApiResponse,
       {
         community_admin_id: string;
         page?: number;

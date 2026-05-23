@@ -7,8 +7,8 @@ import { formatStatusColor } from '../../../../shared/helper/formatStatus';
 import MoreActionsDropdown from '.././MoreActionsDropdown';
 import { useGetEstateResidentsQuery } from '../../../../redux/features/dashboard/dashboardApi';
 import UserStorage from '../../../../shared/utils/userStorage';
-import type { EstateResident } from '../../../../redux/features/dashboard/residentTypes';
-import Spinners from '../../../spinnners/Spinners';
+import type { ResidentAssignment } from '../../../../redux/features/dashboard/residentTypes';
+
 
 type TableColumn<T> = {
   key: keyof T;
@@ -30,7 +30,7 @@ const ResidentTable = () => {
   });
 
   const residentData = useMemo(
-    () => (residentDataResponse?.data?.data as EstateResident[]) || [],
+    () => (residentDataResponse?.data?.data as ResidentAssignment[]) || [],
     [residentDataResponse?.data?.data],
   );
 
@@ -73,7 +73,7 @@ const ResidentTable = () => {
     [residentData, setValue],
   );
 
-  const columns: TableColumn<EstateResident>[] = useMemo(
+  const columns: TableColumn<ResidentAssignment>[] = useMemo(
     () => [
       {
         key: 'id',
@@ -100,7 +100,7 @@ const ResidentTable = () => {
               control={methods.control}
             />
             <span className="text-dark-text font-medium font-libre">
-              {row.user.first_name} {row.user.last_name}
+              {row.resident.user.first_name} {row.resident.user.last_name}
             </span>
           </div>
         ),
@@ -110,7 +110,7 @@ const ResidentTable = () => {
         label: 'Email',
         render: (_, row) => (
           <span className="text-dark text-sm font-medium font-libre">
-            {row.user.email || 'N/A'}
+            {row.resident.user.email || 'N/A'}
           </span>
         ),
       },
@@ -121,7 +121,7 @@ const ResidentTable = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <span className="text-dark font-medium font-libre text-sm">
-                {value.user.mobile_number}
+                {value.resident.user.mobile_number}
               </span>
             </div>
           </div>
@@ -164,42 +164,23 @@ const ResidentTable = () => {
     ],
   );
 
-  // Loading state - show spinner in a centered container
-  if (isLoading) {
-    return (
-      <section>
-        <div className="flex items-center justify-center min-h-100">
-          <Spinners variant="default" size="xl" color="primary" />
-        </div>
-      </section>
-    );
-  }
-
-  // Empty state - no visitors found
-  if (residentData.length === 0) {
-    return (
-      <section>
-        <div className="border border-border rounded-xl">
-          <div className="flex items-center justify-center min-h-75 text-center p-8">
-            <h3 className="text-lg text-pry-light mb-2">No Resident found</h3>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <FormProvider {...methods}>
       <div className="sm:border border-border rounded-xl">
         <div className="mb-5">
-          <Table data={residentData} columns={columns} />
+          <Table data={residentData} columns={columns} loading={isLoading}/>
         </div>
-        <Pagination
-          totalPages={residentDataResponse?.data.meta.totalPages as number}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          maxLength={10}
-        />
+        {
+          residentData.length > 0 && (
+            <Pagination
+              totalPages={residentDataResponse?.data.meta.totalPages ?? 1}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+              maxLength={residentDataResponse?.data?.meta.size ?? 10}
+
+            />
+          )
+        }
       </div>
     </FormProvider>
   );

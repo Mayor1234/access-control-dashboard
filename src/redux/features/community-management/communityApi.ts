@@ -96,42 +96,40 @@ export const communityApi = createApi({
             ]
           : [{ type: 'InvitesResidents', id: 'LIST' }],
     }),
-    // getBuildings: builder.query<
-    //   GetBuildingApiResponse,
-    //   { community_id: string }
-    // >({
-    //   query: ({ community_id }) =>
-    //     `/building/fetch_estate_building?community_id=${community_id}`,
-    //   providesTags: (result) =>
-    //     result?.data.data
-    //       ? [
-    //           ...result.data.data.map(({ id }: { id: string }) => ({
-    //             type: 'InvitesResidents' as const,
-    //             id,
-    //           })),
-    //           { type: 'InvitesResidents', id: 'LIST' },
-    //         ]
-    //       : [{ type: 'InvitesResidents', id: 'LIST' }],
-    // }),
-
+  
     // Add street
     addBuilding: builder.mutation<
-      CreateBuildingApiResponse,
-      {
-        community_id: string;
-        community_user_id: string;
-        street_id: string;
-        building_number: string;
-        description: string;
-      }
-    >({
-      query: (body) => ({
-        url: `/building/add_estate_building`,
-        method: 'POST',
-        body: { ...body },
-      }),
-      invalidatesTags: [{ type: 'InvitesResidents', id: 'LIST' }],
-    }),
+  CreateBuildingApiResponse,
+  {
+    community_id: string;
+    community_user_id: string;
+    street_id: string;
+    building_number: string;
+    description?: string;
+  }
+>({
+  query: ({
+    community_id,
+    community_user_id,
+    street_id,
+    building_number,
+    description,
+  }) => ({
+    url: `/building/add_estate_building`,
+    method: 'POST',
+    body: {
+      community_id,
+      community_user_id,
+      street_id,
+      building_number,
+
+      ...(description && { description }),
+    },
+  }),
+
+  invalidatesTags: [{ type: 'InvitesResidents', id: 'LIST' }],
+}),
+   
 
     // Get all Building Flats with pagination and filters
     getFlats: builder.query<GetFlatApiResponse, { community_id: string }>({
@@ -158,13 +156,28 @@ export const communityApi = createApi({
         community_user_id: string;
         street_id: string;
         building_number: string;
-        description: string;
+        description?: string;
       }
     >({
-      query: (body) => ({
+      query: ({
+        building_id,
+        community_id,
+        community_user_id,
+        street_id,
+        building_number,
+        description
+
+      }) => ({
         url: `/building/update_estate_building`,
-        method: 'PUT',
-        body: { ...body },
+        method: 'POST',
+        body: { 
+          building_id,
+          community_id,
+          community_user_id,
+          street_id,
+          building_number,
+          ...(description && {description})
+         },
       }),
       invalidatesTags: [{ type: 'InvitesResidents', id: 'LIST' }],
     }),
@@ -176,7 +189,7 @@ export const communityApi = createApi({
     >({
       query: (body) => ({
         url: `/building/delete_estate_building`,
-        method: 'DELETE',
+        method: 'POST',
         body: { ...body },
       }),
       invalidatesTags: [{ type: 'InvitesResidents', id: 'LIST' }],

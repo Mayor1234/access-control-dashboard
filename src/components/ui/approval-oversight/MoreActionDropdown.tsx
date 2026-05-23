@@ -1,5 +1,7 @@
+import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { EstateResident } from '../../../redux/features/dashboard/residentTypes';
+import type {  ResidentAssignment } from '../../../redux/features/dashboard/residentTypes';
 import {
   useApproveResidentMutation,
   useRejectResidentMutation,
@@ -15,16 +17,17 @@ const MoreActionsDropdown = ({
   onToggle,
   onClose,
 }: {
-  rowData: EstateResident;
+  rowData: ResidentAssignment;
   community_admin_id: string;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
 }) => {
   const navigate = useNavigate();
-
   const location = useLocation();
   const { pathname } = location;
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   const [approveResident, { isLoading: isApproveLoading }] =
     useApproveResidentMutation();
@@ -33,8 +36,18 @@ const MoreActionsDropdown = ({
 
   const user = useAppSelector((state) => state.auth.user);
 
+  const handleToggle = () => {
+    if (!isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        top: rect.bottom + 4,
+        right: window.innerWidth - rect.right,
+      });
+    }
+    onToggle();
+  };
+
   const handleViewDetail = () => {
-    console.log(`Viewing details for ${rowData}`);
     navigate(`${pathname}/${rowData.id}`);
     onClose();
   };
@@ -78,72 +91,63 @@ const MoreActionsDropdown = ({
   };
 
   return (
-    <div className="relative">
+    <div>
       <button
-        onClick={onToggle}
+        ref={buttonRef}
+        onClick={handleToggle}
         className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
         type="button"
       >
-        <div className="flex flex-col gap-[3px]">
+        <div className="flex flex-col gap-0.75">
           {Array.from({ length: 3 }, (_, i) => (
-            <span
-              key={i}
-              className="w-[3px] h-[3px] bg-[#969DA6] rounded-full"
-            />
+            <span key={i} className="w-0.75 h-0.75 bg-[#969DA6] rounded-full" />
           ))}
         </div>
       </button>
 
-      {isOpen && (
-        <>
-          {/* Overlay to close when clicking outside */}
-          <div className="fixed inset-0 z-10" onClick={onClose} />
-          {/* Dropdown */}
-          <div className="absolute -right-5 -top-10 mt-2 w-36 h-fit bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-            <div className="flex flex-col">
-              <button
-                onClick={handleViewDetail}
-                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
-              >
-                View Detail
-              </button>
-              <button
-                type="button"
-                onClick={handleApproveResident}
-                className="w-full text-left px-4 py-2.5 text-sm text-[#16B364]  transition-all duration-300 ease-linear hover:bg-green-50 cursor-pointer"
-                disabled={isApproveLoading}
-              >
-                {isApproveLoading ? (
-                  <Spinners
-                    variant="default"
-                    size="sm"
-                    color="white"
-                    label="Processing..."
-                  />
-                ) : (
-                  'Approve'
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={handleDeclineResident}
-                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
-              >
-                {isRejectLoading ? (
-                  <Spinners
-                    variant="default"
-                    size="sm"
-                    color="white"
-                    label="Processing..."
-                  />
-                ) : (
-                  'Decline'
-                )}
-              </button>
+      {isOpen &&
+        createPortal(
+          <>
+            <div className="fixed inset-0 z-9998" onClick={onClose} />
+            <div
+              className="fixed w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-9999"
+              style={dropdownStyle}
+            >
+              <div className="flex flex-col">
+                <button
+                  onClick={handleViewDetail}
+                  className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                >
+                  View Detail
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApproveResident}
+                  className="w-full text-left px-4 py-2.5 text-sm text-[#16B364] transition-all duration-300 ease-linear hover:bg-green-50 cursor-pointer"
+                  disabled={isApproveLoading}
+                >
+                  {isApproveLoading ? (
+                    <Spinners variant="default" size="sm" color="white" label="Processing..." />
+                  ) : (
+                    'Approve'
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeclineResident}
+                  className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+                >
+                  {isRejectLoading ? (
+                    <Spinners variant="default" size="sm" color="white" label="Processing..." />
+                  ) : (
+                    'Decline'
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>,
+          document.body,
+        )}
     </div>
   );
 };
