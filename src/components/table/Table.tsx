@@ -118,7 +118,7 @@ function Table<T extends Record<string, any>>({
     return (
       <div className="w-full">
         <div className="flex items-center justify-center text-center py-16 h-full rounded-xl">
-          <h3 className="text-base text-text-light font-medium font-libre">
+          <h3 className="text-base text-text-light font-libre">
             {emptyMessage}
           </h3>
         </div>
