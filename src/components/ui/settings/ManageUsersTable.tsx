@@ -6,7 +6,6 @@ import FormCheckbox from '../forms/FormCheckBox';
 import { useGetAdminUsersQuery } from '../../../redux/features/settings/settingsApi';
 
 import type { EstateAdminUser } from '../../../redux/features/settings/settingsTypes';
-import Spinners from '../../spinnners/Spinners';
 import UserStorage from '../../../shared/utils/userStorage';
 
 type TableColumn<T> = {
@@ -132,35 +131,16 @@ const ManageUsersTable = () => {
     },
   ];
 
-  // Loading state - show spinner in a centered container
-  if (isLoading) {
-    return (
-      <section>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Spinners variant="default" size="xl" color="primary" />
-        </div>
-      </section>
-    );
-  }
-
-  // Empty state - no visitors found
-  if (manageUsersData.length === 0) {
-    return (
-      <section>
-        <div className="border border-border rounded-xl">
-          <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-8">
-            <h3 className="text-lg text-pry-light mb-2">No Building found</h3>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <FormProvider {...methods}>
       <div className="border border-border rounded-xl">
         <div className="mb-5">
-          <Table data={manageUsersData} columns={columns} />
+          <Table
+            data={manageUsersData}
+            columns={columns}
+            loading={isLoading}
+            emptyMessage="No admin users found"
+          />
         </div>
         <Pagination
           totalPages={Number(data?.data.meta.totalPages)}

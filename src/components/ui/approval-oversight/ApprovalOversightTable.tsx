@@ -169,7 +169,12 @@ const ApprovalOversightTable = () => {
     <FormProvider {...methods}>
       <div className="sm:border border-border rounded-xl">
         <div className="mb-5">
-          <Table data={residentsOversight} columns={columns}  loading={isLoading}/>
+          <Table
+            data={residentsOversight}
+            columns={columns}
+            loading={isLoading}
+            emptyMessage="No pending residents found"
+          />
         </div>
         {
           residentsOversight.length > 0 && (

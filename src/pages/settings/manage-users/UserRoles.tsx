@@ -108,6 +108,10 @@ const UserRoles = () => {
                 <div className="flex items-center justify-center min-h-[200px]">
                   <Spinners variant="default" size="xl" color="primary" />
                 </div>
+              ) : communityRolesResponseData?.data.data.length === 0 ? (
+                <div className="flex flex-col items-center justify-center min-h-50 text-center px-4">
+                  <p className="text-sm text-gray-400">No roles created yet</p>
+                </div>
               ) : (
                 <div className="relative">
                   {/* Vertical connecting line */}

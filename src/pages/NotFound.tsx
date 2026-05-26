@@ -19,12 +19,20 @@ const NotFound = () => {
           Sorry, we couldn’t find the page you were looking for. It might have
           been moved or deleted.
         </p>
-        <Link
-          to="/"
-          className="inline-block px-6 py-3 bg-pry text-white rounded-lg text-sm font-medium transition duration-200 hover:bg-pry-dark"
-        >
-          Go to Homepage
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            to="/dashboard"
+            className="inline-block px-6 py-3 bg-pry text-white rounded-lg text-sm font-medium transition duration-200 hover:opacity-90"
+          >
+            Back to Dashboard
+          </Link>
+          <button
+            onClick={() => window.history.back()}
+            className="inline-block px-6 py-3 border border-border text-gray-600 rounded-lg text-sm font-medium transition duration-200 hover:bg-gray-50"
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     </section>
   );

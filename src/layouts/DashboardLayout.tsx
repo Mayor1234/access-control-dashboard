@@ -5,6 +5,7 @@ import SideBar from '../components/side-bar/SideBar';
 import Header from '../components/ui/header/Header';
 import CommunityTap from '../components/ui/tap-header/CommunityTap';
 import { sideBarBottomMenu, sideBarTopMenu } from '../constants';
+import ErrorBoundary from '../components/error-boundary/ErrorBoundary';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -87,7 +88,9 @@ export default function DashboardLayout() {
           <div className="px-5 pt-5">
             <CommunityTap />
           </div>
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </motion.main>
       </div>
     </div>
