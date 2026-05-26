@@ -117,8 +117,8 @@ function Table<T extends Record<string, any>>({
     if (emptyStateRenderer) return emptyStateRenderer();
     return (
       <div className="w-full">
-        <div className="flex items-center justify-center text-center py-16 h-full rounded-xl"> 
-          <h3 className="text-base text-gray-500">
+        <div className="flex items-center justify-center text-center py-16 h-full rounded-xl">
+          <h3 className="text-base text-text-light font-medium font-libre">
             {emptyMessage}
           </h3>
         </div>
@@ -153,7 +153,11 @@ function Table<T extends Record<string, any>>({
             <tbody className="divide-y divide-gray-200 bg-white">
               {data.map((row, rowIndex) => (
                 <tr
-                  key={'id' in row ? String((row as Record<string, unknown>).id) : rowIndex}
+                  key={
+                    'id' in row
+                      ? String((row as Record<string, unknown>).id)
+                      : rowIndex
+                  }
                   onClick={() => onRowClick?.(row, rowIndex)}
                   className={`hover:bg-gray-50 transition-colors ${
                     onRowClick ? 'cursor-pointer' : ''
@@ -183,7 +187,10 @@ function Table<T extends Record<string, any>>({
         <div className="md:hidden space-y-3">
           {data.map((row, rowIndex) => {
             const isExpanded = expandedRows.has(rowIndex);
-            const rowKey = 'id' in row ? String((row as Record<string, unknown>).id) : rowIndex;
+            const rowKey =
+              'id' in row
+                ? String((row as Record<string, unknown>).id)
+                : rowIndex;
 
             const defaultCardRender = (
               <div

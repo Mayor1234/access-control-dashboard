@@ -10,7 +10,6 @@ import UserStorage from '../../../shared/utils/userStorage';
 import { useGetEstateResidentsQuery } from '../../../redux/features/dashboard/dashboardApi';
 import type { EstateResident } from '../../../redux/features/dashboard/residentTypes';
 
-
 type TableColumn<T> = {
   key: keyof T;
   label: string | ReactNode;
@@ -148,25 +147,24 @@ const PendingResidentTable = () => {
     },
   ];
 
- 
- 
-
   return (
     <FormProvider {...methods}>
       <div className="border border-border rounded-xl">
         <div className="mb-5">
-          <Table data={pendingResidents} columns={columns} loading={isLoading} />
+          <Table
+            data={pendingResidents}
+            columns={columns}
+            loading={isLoading}
+          />
         </div>
-        {
-           pendingResidents.length>0 && (
-             <Pagination
-               totalPages={data?.data.meta.totalPages ?? 1}
-               currentPage={currentPage}
-               onPageChange={setCurrentPage}
-               maxLength={10}
-             />
-           )
-        }
+        {pendingResidents.length > 0 && (
+          <Pagination
+            totalPages={data?.data.meta.totalPages ?? 1}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            maxLength={10}
+          />
+        )}
       </div>
     </FormProvider>
   );
